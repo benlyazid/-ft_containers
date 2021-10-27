@@ -6,109 +6,105 @@
 /*   By: kbenlyaz <kbenlyaz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 15:24:55 by kbenlyaz          #+#    #+#             */
-/*   Updated: 2021/10/20 19:59:21 by kbenlyaz         ###   ########.fr       */
+/*   Updated: 2021/10/22 08:53:17 by kbenlyaz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef __VECTOR__
 #define __VECTOR__
 #include <iostream>
+#include "iterator.hpp"
 #include <memory>
 namespace ft
 {
 	typedef  __SIZE_TYPE__  l_size;
 	template<class T, class Allocator = std::allocator<T> >
 	
-	class vector
+	class Vector
 	{
 		private:
 			T *storage;
 			Allocator alloc;
 			l_size size;
-
+			l_size capcity;
 		public:
-		
-			struct Iterator
-			{
-				private:
-					T ptr;
-				
-				public:
-					typedef std::random_access_iterator_tag iterarator_type;
-					Iterator(T m_ptr)
-					{
-						ptr = m_ptr;
-					}
-					T& operator*()
-					{
-						return( *ptr);
-					}
-					Iterator operator->()
-					{
-						return (ptr); 
-					}
-					Iterator& operator++() 
-					{
-						ptr++;
-						return (*this); 
-					}  
-					Iterator operator++(int) 
-					{ 
-						Iterator tmp = *this;
-						++(*this); 
-						return tmp;
-					}
-			};
-			
-			vector(const Allocator& alloc = Allocator())
+
+			typedef T value_type;
+			typedef Allocator allocator_type;
+			typedef T& reference;
+			typedef const T& const_reference;
+			typedef T *pointer;
+			typedef const T *const_pointer;
+			typedef Iterator<std::random_access_iterator_tag, T> iterator ;
+			typedef Iterator<std::random_access_iterator_tag, const T> const_iterator;
+	
+			explicit Vector(const Allocator& alloc = Allocator())
 			{
 				this->alloc = alloc;
-				this->starge = this->alloc.allocate(100);
+				this->size = 0;
+				this->capcity = 0;
 			}
 			
-			vector(l_size n, const T& val =T(), const Allocator& alloc = Allocator())
+			explicit Vector(l_size n, const T& val = T(), const Allocator& alloc = Allocator())
 			{
+				this->size = n;
 				this->alloc = alloc;
-				this->storage = this->alloc.allocate(n * 2);
+				this->storage = this->alloc.allocate(n);
+				this->capcity = n;
 				for (l_size i = 0; i < n; i++)
 				{
 					this->storage[i] = val;
 				}
-				
-			}
-			
-			vector(const vector& v)
+			}	
+
+			Vector(const Vector& v)
 			{
 				this = v;
 			}
 
-			vector(Iterator first, Iterator last, const Allocator& alloc = Allocator())
+			/*template <class InputIterator>
+			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator())
 			{
-				std::cout << "her1\n";
-				
-			}
-			vector& operator=(const vector& v)
+				this->size = last - first;
+				this->capcity = this->size;
+				this->alloc = alloc;
+				this->storage = alloc.allocate(size);
+				int i = 0;
+				while (first != last)
+				{
+					storage[i] = *first;
+					first++;
+					i++;
+				}
+			}*/
+			
+			Vector& operator=(const Vector& v)
 			{
-				
+				if (this != v)
+				{
+					this->size = v.size;
+					this->alloc = v.alloc;
+					this->storage = v.storage;
+					this->capcity = v.capcity;
+				}
 			}
 			
-			~vector()
-			{
-				
+			~Vector()
+			{				
 			}
 			
-			T operator[](l_size n)const
+			value_type operator[](l_size n)const
 			{
 				return this->storage[n];
 			}
-			Iterator begin()
+			iterator begin()
 			{
-				return (Iterator(&storage[0]));
+				return (iterator(&storage[0]));
 			}
 			
-			Iterator end()
+			iterator end()
 			{
-				return (Iterator(&storage[size]));
+				return (iterator(&storage[size]));
 			}
 	};
 
