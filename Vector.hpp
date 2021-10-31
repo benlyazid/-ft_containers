@@ -14,7 +14,7 @@
 #define __VECTOR__
 #include <iostream>
 #include "iterator.hpp"
-#include <memory>
+#include "utils.hpp"
 namespace ft
 {
 	typedef  __SIZE_TYPE__  l_size;
@@ -61,14 +61,14 @@ namespace ft
 			{
 				this = v;
 			}
-
-			/*template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator())
+			
+			template <class InputIterator>
+			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename std::enable_if<ft::is_iterator<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
 				this->size = last - first;
 				this->capcity = this->size;
 				this->alloc = alloc;
-				this->storage = alloc.allocate(size);
+				this->storage = this->alloc.allocate(size);
 				int i = 0;
 				while (first != last)
 				{
@@ -76,7 +76,7 @@ namespace ft
 					first++;
 					i++;
 				}
-			}*/
+			}
 			
 			Vector& operator=(const Vector& v)
 			{
@@ -88,7 +88,7 @@ namespace ft
 					this->capcity = v.capcity;
 				}
 			}
-			
+
 			~Vector()
 			{				
 			}

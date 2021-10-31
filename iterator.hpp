@@ -21,9 +21,9 @@ class Iterator
 		{
 			*this = t;
 		}
-		operator Iterator<std::random_access_iterator_tag, const T>()
+		operator const_iterator()
 		{
-			return Iterator<std::random_access_iterator_tag, const T>(this->ptr);
+			return const_iterator(this->ptr);
 		}
 
 

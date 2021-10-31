@@ -194,5 +194,16 @@ int main()
 {
 	iterator_tests();
     const_iterator_tests();
+
+	{
+		std::vector<int> std_vector(10, 20);
+		std::vector<int>::iterator it_1, it_2;
+		it_1 = std_vector.begin();
+		it_2 = std_vector.end();
+		ft::Vector<int> ft_vector(it_1, it_2);
+		std::cout << ft_vector[5] << std::endl;
+		std::cout << std_vector[5] << std::endl;
+		EQUAL(ft_vector[5] == std_vector[5]);
+	}
 	return 0;
 }
