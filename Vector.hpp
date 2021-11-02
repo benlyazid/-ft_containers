@@ -14,6 +14,7 @@
 #define __VECTOR__
 #include <iostream>
 #include "iterator.hpp"
+#include "reverse_iterator.hpp"
 #include "utils.hpp"
 namespace ft
 {
@@ -28,7 +29,6 @@ namespace ft
 			l_size size;
 			l_size capcity;
 		public:
-
 			typedef T value_type;
 			typedef Allocator allocator_type;
 			typedef T& reference;
@@ -37,6 +37,8 @@ namespace ft
 			typedef const T *const_pointer;
 			typedef Iterator<std::random_access_iterator_tag, T> iterator ;
 			typedef Iterator<std::random_access_iterator_tag, const T> const_iterator;
+			typedef reverse_iterator<const_iterator> const_reverse_iterator;
+			typedef ft::reverse_iterator<iterator> reverse_iterator;
 	
 			explicit Vector(const Allocator& alloc = Allocator())
 			{
@@ -55,7 +57,7 @@ namespace ft
 				{
 					this->storage[i] = val;
 				}
-			}	
+			}
 
 			Vector(const Vector& v)
 			{
@@ -63,7 +65,7 @@ namespace ft
 			}
 			
 			template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename std::enable_if<ft::is_iterator<InputIterator>::value, InputIterator>::type = InputIterator())
+			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename std::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
 				this->size = last - first;
 				this->capcity = this->size;
@@ -90,7 +92,10 @@ namespace ft
 			}
 
 			~Vector()
-			{				
+			{
+				/*
+					dealocat all memmory  !!!!!!!!!!!!!!!!!!!!
+				*/			
 			}
 			
 			value_type operator[](l_size n)const
@@ -101,7 +106,6 @@ namespace ft
 			{
 				return (iterator(&storage[0]));
 			}
-			
 			iterator end()
 			{
 				return (iterator(&storage[size]));

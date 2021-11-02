@@ -197,13 +197,14 @@ int main()
 
 	{
 		std::vector<int> std_vector(10, 20);
-		std::vector<int>::iterator it_1, it_2;
-		it_1 = std_vector.begin();
-		it_2 = std_vector.end();
-		ft::Vector<int> ft_vector(it_1, it_2);
-		std::cout << ft_vector[5] << std::endl;
-		std::cout << std_vector[5] << std::endl;
-		EQUAL(ft_vector[5] == std_vector[5]);
+		std::vector<int>::iterator it1;
+		std::vector<int>::reverse_iterator r1, r2(it1);
+		std::vector<int>::reverse_iterator r3(r2);
+
+		ft::Vector<int> ft_vector(10, 20);
+		ft::Vector<int>::iterator ft_it1;
+		ft::Vector<int>::reverse_iterator ft_r1, ft_r2(ft_it1);
+		ft::Vector<int>::reverse_iterator ft_r3(ft_r2);
 	}
 	return 0;
 }
