@@ -4,7 +4,8 @@
 namespace ft
 {
 	template <class Iterator_>
-	class reverse_iterator : public Iterator<typename Iterator_::iterator_category, typename Iterator_::value_type>
+	//class reverse_iterator : public Iterator<typename Iterator_::iterator_category, typename Iterator_::value_type>
+	class reverse_iterator
 	{
 		public:
 			typedef 			Iterator_ iterator_type;
@@ -31,12 +32,20 @@ namespace ft
 				*this = rev_it;
 			}
 
-			
 			operator const_reverse_iterator()
 			{
 				return const_reverse_iterator(this->ptr);
 			}
+
+			iterator_type base() const
+			{
+				iterator_type it;
+				it.ptr = this->ptr;
+				return  it;
+			}
+		protected:
+			iterator_type current;
 	};
 };
-
+	// #corect end
 #endif

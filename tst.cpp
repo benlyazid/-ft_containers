@@ -35,36 +35,8 @@ class class_b : public class_a
 /*
 ##############################################################
 */
-
-
 int main()
 {
-	{
-
-		std::vector<int>std_vector(10, 0);
-		for (size_t i = 0; i < 10; i++)
-		{
-			std_vector[i] = i + 1;
-		}
-		ft::Vector<int> v(4,5);
-		std::vector<int>::reverse_iterator my_rit1(std_vector.begin()), my_rit2(std_vector.end());
-		std::cout << *my_rit1.base() << "     " << *my_rit2.base() << std::endl;
-		std::cout << *my_rit1 << "     " << *my_rit2 << std::endl;
-
-		std::cout << "**************************************" << std::endl;
-		my_rit1--;
-		my_rit2++;
-		std::cout << *my_rit1.base() << "     " << *my_rit2.base() << std::endl;
-		std::cout << *my_rit1 << "     " << *my_rit2 << std::endl;
-		
-		std::cout << "**************************************" << std::endl;
-		my_rit1--;
-		my_rit2++;
-		std::cout << *my_rit1.base() << "     " << *my_rit2.base() << std::endl;
-		std::cout << *my_rit1 << "     " << *my_rit2 << std::endl;
-		//std::cout << *std_vector.begin() << "     " << *std_vector.end() << std::endl;
-
-
-
+	ft::Vector<int>my_vector(10,0);
+	// std::vector<int>::reverse_iterator:
 	}
-}

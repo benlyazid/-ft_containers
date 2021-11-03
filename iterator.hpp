@@ -16,7 +16,7 @@ namespace ft
 			typedef Distance difference_type ;
 			typedef Iterator<std::random_access_iterator_tag, const T> const_iterator;
 
-			Iterator(T *m_ptr) :ptr(m_ptr){}
+			Iterator(T *m_ptr) :current(m_ptr){}
 
 			Iterator(const Iterator  &t)
 			{
@@ -28,7 +28,7 @@ namespace ft
 			}
 			operator const_iterator()
 			{
-				return const_iterator(this->ptr);
+				return const_iterator(this->current);
 			}
 
 
@@ -37,21 +37,21 @@ namespace ft
 			{
 				if (this == &t)
 					return *this;
-				this->ptr = t.ptr;
+				this->current = t.current;
 				return *this;
 			}
 			reference operator*()
 			{
-				return(*ptr);
+				return(*current);
 			}
 			pointer operator->() const
 			{
-				return (ptr); 
+				return (current); 
 			}
 
 			Iterator& operator++() 
 			{
-				ptr++;
+				current++;
 				return (*this); 
 			}  
 			Iterator operator++(int) 
@@ -63,7 +63,7 @@ namespace ft
 
 			Iterator& operator--() 
 			{
-				ptr--;
+				current--;
 				return (*this); 
 			}  
 			Iterator operator--(int) 
@@ -74,63 +74,63 @@ namespace ft
 			}
 			bool operator==(const Iterator  &iter) const
 			{
-				return (this->ptr == iter.ptr);
+				return (this->current == iter.current);
 			}
 			bool operator!=(const Iterator  &iter) const
 			{
-				return (this->ptr != iter.ptr);
+				return (this->current != iter.current);
 			}
 			bool operator >(const Iterator &iter) const
 			{
-				return (this->ptr > iter.ptr);
+				return (this->current > iter.current);
 			}				
 			bool operator >=(const Iterator &iter) const
 			{
-				return (this->ptr >= iter.ptr);
+				return (this->current >= iter.current);
 			}					
 			bool operator <(const Iterator &iter) const
 			{
-				return (this->ptr < iter.ptr);
+				return (this->current < iter.current);
 			}					
 			bool operator <=(const Iterator &iter) const
 			{
-				return (this->ptr <= iter.ptr);
+				return (this->current <= iter.current);
 			}
 			Iterator operator+(int incr)
 			{
 				Iterator iter;
 				iter = *this;
-				iter.ptr += incr;
+				iter.current += incr;
 				return iter;
 			}					
 			Iterator operator-(int incr)
 			{
-				return (this->ptr - incr);
+				return (this->current - incr);
 			}	
 			int operator -(Iterator &iter)
 			{
-				return this->ptr - iter.ptr;
+				return this->current - iter.current;
 			}
 			Iterator& operator -=(int incr)
 			{
-				this->ptr -= incr;
+				this->current -= incr;
 				return *this;
 			}	
 			Iterator& operator +=(int incr)
 			{
-				this->ptr += incr;
+				this->current += incr;
 				return *this;
 			}
 			friend Iterator operator+(int number, const Iterator& iter)
 			{
-				return iter.ptr + number;
+				return iter.current + number;
 			}
 			reference operator[](__SIZE_TYPE__ index)
 			{
-				return this->ptr[index];
+				return this->current[index];
 			}
 		protected:
-			pointer ptr;
+			pointer current;
 	};
 };
 #endif

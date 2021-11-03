@@ -98,9 +98,9 @@ namespace ft
 				*/			
 			}
 			
-			value_type operator[](l_size n)const
+			reference operator[](l_size n) const
 			{
-				return this->storage[n];
+				return (this->storage[n]);
 			}
 			iterator begin()
 			{
@@ -108,7 +108,7 @@ namespace ft
 			}
 			iterator end()
 			{
-				return (iterator(&storage[size]));
+				return (iterator(&storage[size - 1] + 1));
 			}
 	};
 
