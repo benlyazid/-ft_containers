@@ -96,20 +96,20 @@ namespace ft
 			{
 				return (this->current <= iter.current);
 			}
-			Iterator operator+(int incr)
+			Iterator operator+(int incr)const
 			{
 				Iterator iter;
 				iter = *this;
 				iter.current += incr;
 				return iter;
 			}					
-			Iterator operator-(int incr)
+			Iterator operator-(int incr)const
 			{
 				return (this->current - incr);
 			}	
-			int operator -(Iterator &iter)
+			int operator-(Iterator &iter)const
 			{
-				return this->current - iter.current;
+				return (this->current - iter.current);
 			}
 			Iterator& operator -=(int incr)
 			{
@@ -121,10 +121,18 @@ namespace ft
 				this->current += incr;
 				return *this;
 			}
+
 			friend Iterator operator+(int number, const Iterator& iter)
 			{
 				return iter.current + number;
 			}
+
+			friend Iterator operator-(int number, const Iterator& iter)
+			{
+				return iter.current - number;
+			}
+
+
 			reference operator[](__SIZE_TYPE__ index)
 			{
 				return this->current[index];
