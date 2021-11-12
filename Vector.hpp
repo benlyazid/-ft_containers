@@ -33,14 +33,9 @@ namespace ft
 			{
 				l_size upgrade = 2;
 				l_size new_size = _size * upgrade;
-				if (!new_size)
-					new_size++;
-				while (new_size < n)
-				{
-					new_size = _size * upgrade;
-					upgrade++;
-				}
-				return (new_size);
+				if (new_size >= n)
+					return new_size;
+				return (n);
 			}
 		public:
 			typedef T value_type;
@@ -390,7 +385,7 @@ namespace ft
 				}
 				else
 				{
-					l_size new_capacity = calcule_new_capacity(_size);
+					l_size new_capacity = calcule_new_capacity(_size + 1);
 					pointer new_storage = alloc.allocate(new_capacity);
 					l_size old_index = 0;
 					_size++;
@@ -411,27 +406,60 @@ namespace ft
 					return (this->begin() + return_position);
 				}
 			}
-			void insert (iterator position_iter, size_type n, const value_type& val)
+			void insert (iterator position_iter, l_size	 n, const value_type& val)
 		 	{
-				l_size  position = 0;
+				l_size old_index, position, new_index, new_capacity;
+				position = 0;
 				iterator iter = this->begin();
 				while (position_iter != iter && iter != this->end())
 				{
 					iter++;
 					position++;
 				}
-				/*if (_capacity > _size + n)
-				{
-					for (; position < _size + n ; ++)
-					{
 
+				if (_capacity >= _size + n)
+				{
+					/*
+						ERROR IN THIS FUNCTION;
+						IN INSERTING WHAT COME AFTER THE POSITION RANGE !!!
+					*/
+					for(l_size index = 0; index < n; index++)
+					{
+						if (index < _size)
+						{
+							alloc.construct(_storage + position + index + n, _storage[position + index]);
+							alloc.destroy(_storage + position + index);
+						}
+					}
+					for(l_size index = 0; index < n; index++)
+					{
+						alloc.construct(_storage + position + index, val);
 					}
 				}
 				else
 				{
-
+					new_capacity = calcule_new_capacity(_size + n);
+					pointer new_storage = alloc.allocate(new_capacity);
+					for(l_size index = 0; index < position; index++)
+					{
+						alloc.construct(new_storage + index, _storage[index]);
+						alloc.destroy(_storage + index);
+					}
+					for(l_size index = 0; index < n; index++)
+					{
+						alloc.construct(new_storage + index + position, val);
+					}
+					for(l_size index = position; index < _size; index++)
+					{
+						alloc.construct(new_storage + index + n, _storage[index]);
+						alloc.destroy(_storage + index);
+					}
+					alloc.deallocate(_storage, _capacity);
+					_size += n;
+					_capacity = new_capacity;
+					_storage = new_storage;
 				}
-		 	}*/
+		 	}
 
 	};
 
