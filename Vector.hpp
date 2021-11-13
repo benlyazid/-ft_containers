@@ -77,7 +77,7 @@ namespace ft
 				*this = v;
 			}
 			template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename std::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
+			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
 			{
 				this->_size = abs(last - first);
 				this->_capacity = this->_size;
@@ -135,11 +135,11 @@ namespace ft
 
 			iterator begin()
 			{
-				return (iterator(&_storage[0]));
+				return (iterator(_storage));
 			}
 			iterator end()
 			{
-				return (iterator(&_storage[_size]));
+				return (iterator(_storage + _size));
 			}
 			const_iterator end() const
 			{
@@ -214,51 +214,43 @@ namespace ft
 				_capacity = new_capacity;
 				_storage = new_storage;
 			}
-			void reserve (l_size n)
-			{
+			void reserve (l_size n){
 				if (n <= _capacity)
 					return ;
 				pointer	new__storage = alloc.allocate(n);
-				for (l_size i = 0; i < _size; i++)
-				{
+				for (l_size i = 0; i < _size; i++){
 					alloc.construct(new__storage + i, _storage[i]);
+					alloc.destroy(_storage + i);
 				}
 				if (_capacity)
 					alloc.deallocate(_storage, _capacity);
 				_storage = new__storage;
 				_capacity = n;
 			}
-			reference at (l_size n)
-			{
+			reference at (l_size n){
 				if (n > _size)
 					throw(std::out_of_range("at"));
 					return _storage[n];
 			}
-			const_reference at (l_size n) const
-			{
+			const_reference at (l_size n) const{
 				if (n > _size)
 					throw(std::out_of_range("at"));
 				return (_storage[n]);
 			}
-			reference front()
-			{
+			reference front(){
 					return (_storage[_size - 1]);
 			}
-			const_reference front() const
-			{
+			const_reference front() const{
 				return (_storage[_size - 1]);
 			}
-			reference back()
-			{
+			reference back(){
 				return (_storage[0]);
 			}
-			const_reference back() const
-			{
+			const_reference back() const{
 				return (_storage[0]);
 			}
 			template <class InputIterator>
-		  	void assign (InputIterator first, InputIterator last)
-			{
+		  	void assign (InputIterator first, InputIterator last){
 				l_size new_size = last - first;
 				int index = 0;
 				if (_capacity >=  new_size)
@@ -294,8 +286,7 @@ namespace ft
 					_storage = new_storage;
 				}
 			}
-			void assign (l_size n, const value_type& val)
-			{
+			void assign (l_size n, const value_type& val){
 
 				l_size new_size = n;
 				int index = 0;
@@ -330,18 +321,15 @@ namespace ft
 					_storage = new_storage;
 				}
 			}
-			void push_back (const value_type& val)
-			{
-				if (_capacity > _size)
-				{
+			void push_back (const value_type& val){
+				if (_capacity > _size){
 					alloc.construct(_storage + _size, val);
 					_size++;
 					return ;
 				}
 				l_size new_capacity = calcule_new_capacity(_size + 1);
 				pointer new_storage = alloc.allocate(new_capacity);
-				for (l_size i = 0; i < _size; i++)
-				{
+				for (l_size i = 0; i < _size; i++){
 					 alloc.construct(new_storage + i, _storage[i]);
 					 alloc.destroy(_storage + i);
 				}
@@ -352,29 +340,24 @@ namespace ft
 				_storage = new_storage;
 
 			}
-			void pop_back()
-			{
+			void pop_back(){
 				if (!_size)
 					return ;
 				_size--;
 				alloc.destroy(_storage + _size);
 			}
-			iterator insert (iterator position_iter, const value_type& val)
-			{
+			iterator insert (iterator position_iter, const value_type& val){
 				l_size  position = 0;
 				iterator iter = this->begin();
-				while (position_iter != iter && iter != this->end())
-				{
+				while (position_iter != iter && iter != this->end()){
 					iter++;
 					position++;
 				}
 				l_size return_position = position;
 				value_type new_value, tmp;
-				if (_size < _capacity)
-				{
+				if (_size < _capacity){
 					new_value = val;
-					for (; position < _size; position++)
-					{
+					for (; position < _size; position++){
 						tmp = _storage[position];
 						alloc.construct(_storage + position, new_value);
 						new_value = tmp;
@@ -383,18 +366,15 @@ namespace ft
 					_size++;
 					return (this->begin() + return_position);
 				}
-				else
-				{
+				else{
 					l_size new_capacity = calcule_new_capacity(_size + 1);
 					pointer new_storage = alloc.allocate(new_capacity);
 					l_size old_index = 0;
 					_size++;
-					for(l_size index = 0; index < _size; index++)
-					{
+					for(l_size index = 0; index < _size; index++){
 						if (index == position)
 							alloc.construct(new_storage + index, val);
-						else
-						{
+						else{
 							alloc.construct(new_storage + index, _storage[old_index]);
 							alloc.destroy(_storage + old_index);
 							old_index++;
@@ -406,51 +386,32 @@ namespace ft
 					return (this->begin() + return_position);
 				}
 			}
-			void insert (iterator position_iter, l_size	 n, const value_type& val)
-		 	{
+			void insert (iterator position_iter, l_size	 n, const value_type& val){
 				l_size old_index, position, new_index, new_capacity;
-				position = 0;
-				iterator iter = this->begin();
-				while (position_iter != iter && iter != this->end())
-				{
-					iter++;
-					position++;
-				}
-
-				if (_capacity >= _size + n)
-				{
-					/*
-						ERROR IN THIS FUNCTION;
-						IN INSERTING WHAT COME AFTER THE POSITION RANGE !!!
-					*/
-					for(l_size index = 0; index < n; index++)
-					{
-						if (index < _size)
-						{
-							alloc.construct(_storage + position + index + n, _storage[position + index]);
-							alloc.destroy(_storage + position + index);
+				position = position = position_iter  - this->begin();
+				if (_capacity >= _size + n){
+					for(l_size index = _size - 1; index >= position; index--){
+						if (index < _size){
+							alloc.construct(_storage + index + n, _storage[index]);
+							alloc.destroy(_storage + index);
 						}
 					}
-					for(l_size index = 0; index < n; index++)
-					{
+					for(l_size index = 0; index < n; index++) {
 						alloc.construct(_storage + position + index, val);
 					}
+					_size += n;
 				}
-				else
-				{
+				else{
 					new_capacity = calcule_new_capacity(_size + n);
 					pointer new_storage = alloc.allocate(new_capacity);
-					for(l_size index = 0; index < position; index++)
-					{
+					for(l_size index = 0; index < position; index++){
 						alloc.construct(new_storage + index, _storage[index]);
 						alloc.destroy(_storage + index);
 					}
-					for(l_size index = 0; index < n; index++)
-					{
+					for(l_size index = 0; index < n; index++){
 						alloc.construct(new_storage + index + position, val);
 					}
-					for(l_size index = position; index < _size; index++)
-					{
+					for(l_size index = position; index < _size; index++){
 						alloc.construct(new_storage + index + n, _storage[index]);
 						alloc.destroy(_storage + index);
 					}
@@ -460,7 +421,53 @@ namespace ft
 					_storage = new_storage;
 				}
 		 	}
+			template <class InputIterator>
+		    void insert (iterator position_iter, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
+				l_size n = last - first;
+				l_size position = position_iter  - this->begin();
+				if (_size + n <= _capacity){
+					for(l_size index = _size - 1; index >= position; index--){
+						if (index < _size){
+							alloc.construct(_storage + index + n, _storage[index]);
+							alloc.destroy(_storage + index);
+						}
+					}
+					for(l_size index = 0; index < n; index++){
+						alloc.construct(_storage + position + index, *first);
+						first++;
+					}
+					_size += n;
+				}
+				else{
+						l_size new_capacity = calcule_new_capacity(_size + n);
+						pointer new_storage = alloc.allocate(new_capacity);
+						for(l_size index = 0; index < position; index++){
+							alloc.construct(new_storage + index, _storage[index]);
+							alloc.destroy(_storage + index);
+						}
+						for(l_size index = 0; index < n; index++){
+							alloc.construct(new_storage + index + position, *first);
+							first++;
+						}
+						for(l_size index = position; index < _size; index++){
+							alloc.construct(new_storage + index + n, _storage[index]);
+							alloc.destroy(_storage + index);
+						}
+						alloc.deallocate(_storage, _capacity);
+						_size += n;
+						_capacity = new_capacity;
+						_storage = new_storage;
+				}
+			}
+			iterator erase (iterator position_iter){
+				l_size position = position_iter - this->begin();
+				for (size_t index = position; index < _size + position; index++) {
+					/* code */
+				}
+			}
+			iterator erase (iterator first, iterator last){
 
+			}
 	};
 
 };

@@ -6,7 +6,7 @@ namespace ft
 
 	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
 	class Iterator
-	{		
+	{
 		public:
 
 			typedef Category iterator_category ;
@@ -46,30 +46,30 @@ namespace ft
 			}
 			pointer operator->() const
 			{
-				return (current); 
+				return (current);
 			}
 
-			Iterator& operator++() 
+			Iterator& operator++()
 			{
 				current++;
-				return (*this); 
-			}  
-			Iterator operator++(int) 
-			{ 
+				return (*this);
+			}
+			Iterator operator++(int)
+			{
 				Iterator tmp = *this;
-				++(*this); 
+				++(*this);
 				return tmp;
 			}
 
-			Iterator& operator--() 
+			Iterator& operator--()
 			{
 				current--;
-				return (*this); 
-			}  
-			Iterator operator--(int) 
-			{ 
+				return (*this);
+			}
+			Iterator operator--(int)
+			{
 				Iterator tmp = *this;
-				--(*this); 
+				--(*this);
 				return tmp;
 			}
 			bool operator==(const Iterator  &iter) const
@@ -83,15 +83,15 @@ namespace ft
 			bool operator >(const Iterator &iter) const
 			{
 				return (this->current > iter.current);
-			}				
+			}
 			bool operator >=(const Iterator &iter) const
 			{
 				return (this->current >= iter.current);
-			}					
+			}
 			bool operator <(const Iterator &iter) const
 			{
 				return (this->current < iter.current);
-			}					
+			}
 			bool operator <=(const Iterator &iter) const
 			{
 				return (this->current <= iter.current);
@@ -102,12 +102,12 @@ namespace ft
 				iter = *this;
 				iter.current += incr;
 				return iter;
-			}					
+			}
 			Iterator operator-(int incr)const
 			{
 				return (this->current - incr);
-			}	
-			int operator-(Iterator &iter)const
+			}
+			int operator-(Iterator  const &iter) const
 			{
 				return (this->current - iter.current);
 			}
@@ -115,22 +115,23 @@ namespace ft
 			{
 				this->current -= incr;
 				return *this;
-			}	
+			}
 			Iterator& operator +=(int incr)
 			{
 				this->current += incr;
 				return *this;
 			}
-
 			friend Iterator operator+(int number, const Iterator& iter)
 			{
-				return iter.current + number;
+				return (iter.current + number);
 			}
 
-			friend Iterator operator-(int number, const Iterator& iter)
+
+			//SHOULD DELETE THIS FUNCTION ;
+			/*friend Iterator operator-(int number, const Iterator& iter)
 			{
 				return iter.current - number;
-			}
+			}*/
 
 
 			reference operator[](__SIZE_TYPE__ index)
@@ -140,5 +141,15 @@ namespace ft
 		protected:
 			pointer current;
 	};
+	/*template < class T>
+	Iterator<std::random_access_iterator_tag, T> operator+(int number, const Iterator<std::random_access_iterator_tag, T>& iter)
+	{
+		return iter.current + number;
+	}*/
 };
+
+
+/*
+	comparison functions are not members shoould put them outside the class ;
+*/
 #endif
