@@ -50,35 +50,30 @@ namespace ft
 			typedef reverse_iterator<iterator> reverse_iterator;
 			typedef size_t size_type;
 
-			explicit Vector(const Allocator& alloc = Allocator())
-			{
+			explicit Vector(const Allocator& alloc = Allocator()){
 
 				this->alloc = alloc;
 				this->_size = 0;
 				this->_capacity = 0;
 				this->_storage = NULL;
 			}
-			explicit Vector(l_size n, const T& val = T(), const Allocator& alloc = Allocator())
-			{
+			explicit Vector(l_size n, const T& val = T(), const Allocator& alloc = Allocator()){
 				this->_size = n;
 				this->alloc = alloc;
 				this->_storage = this->alloc.allocate(n);
 				this->_capacity = n;
-				for (l_size i = 0; i < n; i++)
-				{
+				for (l_size i = 0; i < n; i++){
 					this->alloc.construct(_storage + i, val);
 				}
 			}
-			Vector(const Vector& v)
-			{
+			Vector(const Vector& v){
 				_size = 0;
 				_capacity = 0;
 				_storage = NULL;
 				*this = v;
 			}
 			template <class InputIterator>
-			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator())
-			{
+			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
 				this->_size = abs(last - first);
 				this->_capacity = this->_size;
 				this->alloc = alloc;
@@ -91,8 +86,7 @@ namespace ft
 					i++;
 				}
 			}
-			Vector& operator=(const Vector& v)
-			{
+			Vector& operator=(const Vector& v){
 				if (this != &v)
 				{
 					for (size_t i = 0; i < _size ; i++)
@@ -114,8 +108,7 @@ namespace ft
 				}
 				return *this;
 			}
-			~Vector()
-			{
+			~Vector(){
 				for (size_t i = 0; i < _size; i++)
 				{
 					alloc.destroy(_storage + i);
@@ -461,15 +454,51 @@ namespace ft
 			}
 			iterator erase (iterator position_iter){
 				l_size position = position_iter - this->begin();
-				for (size_t index = position; index < _size + position; index++) {
-					/* code */
+				for (size_t index = position; index < _size; index++){
+					alloc.destroy(_storage + index);
+					if (index + 1 < _size)
+						alloc.construct(_storage + index, _storage[index + 1]);
 				}
+				_size--;
+				return (iterator(&_storage[position]));
 			}
 			iterator erase (iterator first, iterator last){
+				l_size position = first - this->begin();
+				l_size range_to_erase = last - first;
+				for (size_t index = position; index < _size; index++){
+					alloc.destroy(_storage + index);
+					if (index + range_to_erase < _size)
+						alloc.construct(_storage + index, _storage[index + range_to_erase]);
+				}
+				_size -= range_to_erase;				
+				return (iterator(&_storage[position]));
+			}
 
+			void clear(){
+				for (l_size index = 0; index < _size; index++)
+					alloc.destroy(_storage + index);
+				_size = 0;
+			}
+
+			void swap (Vector& x){
+				l_size new_size, new_capacity;
+				new_size = x.size();
+				new_capacity = x.capacity();
+				pointer new_storage = alloc.allocate(new_capacity);
+				for (l_size index = 0; index < new_size; index++){
+					alloc.construct(new_storage + index, x[index]);
+				}
+				x.clear();
+				x.insert(x.begin(), this->begin(), this->end());
+				
+				for (l_size index = 0; index < new_size; index++){
+					alloc.destroy(_storage + index);
+				}
+				alloc.deallocate(_storage + _capacity);
+				_storage = new_storage;
+				_size = new_size;
+				_capacity = new_capacity;
 			}
 	};
-
 };
-
 #endif

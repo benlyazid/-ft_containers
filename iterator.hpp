@@ -31,7 +31,6 @@ namespace ft
 				return const_iterator(this->current);
 			}
 
-
 			Iterator(){}
 			Iterator& operator=(Iterator const &t)
 			{
