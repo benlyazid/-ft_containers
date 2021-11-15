@@ -10,8 +10,7 @@ namespace ft
         typedef Container container_type;
         typedef size_type size_t;
         explicit stack (const container_type& ctnr = container_type())
-        {
-            
+        {  
         } 
     }
 }
