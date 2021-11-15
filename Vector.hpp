@@ -13,7 +13,7 @@
 #ifndef __VECTOR__
 #define __VECTOR__
 #include <iostream>
-#include "iterator.hpp"
+#include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
 #include <math.h>
 #include "utils.hpp"
@@ -44,8 +44,8 @@ namespace ft
 			typedef const T& const_reference;
 			typedef T *pointer;
 			typedef const T *const_pointer;
-			typedef Iterator<std::random_access_iterator_tag, T> iterator ;
-			typedef Iterator<std::random_access_iterator_tag, const T> const_iterator;
+			typedef ft::random_access_iterator<std::random_access_iterator_tag, T> iterator ;
+			typedef ft::random_access_iterator<std::random_access_iterator_tag, const T> const_iterator;
 			typedef reverse_iterator<const_iterator> const_reverse_iterator;
 			typedef reverse_iterator<iterator> reverse_iterator;
 			typedef size_t size_type;
@@ -165,8 +165,8 @@ namespace ft
 			bool empty() const
 			{
 				if (_size)
-					return (true);
-				return false;
+					return (false);
+				return true;
 			}
 			l_size capacity() const
 			{
@@ -481,24 +481,90 @@ namespace ft
 			}
 
 			void swap (Vector& x){
-				l_size new_size, new_capacity;
-				new_size = x.size();
-				new_capacity = x.capacity();
-				pointer new_storage = alloc.allocate(new_capacity);
-				for (l_size index = 0; index < new_size; index++){
-					alloc.construct(new_storage + index, x[index]);
-				}
-				x.clear();
-				x.insert(x.begin(), this->begin(), this->end());
-				
-				for (l_size index = 0; index < new_size; index++){
-					alloc.destroy(_storage + index);
-				}
-				alloc.deallocate(_storage + _capacity);
-				_storage = new_storage;
-				_size = new_size;
-				_capacity = new_capacity;
+				std::swap(x._storage, this->_storage);
+				std::swap(x._size, this->_size);
+				std::swap(x._capacity, this->_capacity);
+
+			}
+			allocator_type get_allocator() const{
+				return (alloc);
 			}
 	};
+	template <class InputIterator1, class InputIterator2>
+	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2){
+		while (first1 != last1){
+			if (*first1 != *first2)
+				return (false);
+			first1++;
+			first2++;
+		}
+		return (true);
+	}
+	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
+	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred){
+		while (first1 != last1){
+			if (!pred(*first1,*first2))
+				return (false);
+			first1++;
+			first2++;
+		}
+		return (true);
+
+	}
+	template <class InputIterator1, class InputIterator2>
+  	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2){
+		while (first1!=last1){
+			if (first2==last2 || *first2<*first1) 
+				return false;
+			else if (*first1<*first2) 
+				return true;
+			++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
+	template <class InputIterator1, class InputIterator2, class Compare>
+	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp){
+		while (first1!=last1){
+			if (first2==last2 || *first2<*first1) 
+				return false;
+			else if (comp(*first1, first2))
+				return true;
+			++first1; ++first2;
+		}
+		return (first2!=last2);
+	}
+
+	template <class T_V, class Alloc>
+  	void swap (Vector<T_V,Alloc>& x, Vector<T_V,Alloc>& y){
+	  x.swap(y);
+  	}
+
+	template <class T, class Alloc>
+  	bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		if (lhs.size() != rhs.size())
+			return (false);
+		return (ft::equal(lhs.begin(), lhs.end(), rhs.begin()));
+	}
+	template <class T, class Alloc>
+	bool operator!= (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		return !(lhs == rhs);
+	}
+	template <class T, class Alloc>
+	bool operator<  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}
+	template <class T, class Alloc>
+	bool operator<=  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		return !(ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+	}
+	template <class T, class Alloc>
+	bool operator>  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		return (ft::lexicographical_compare(rhs.begin(), rhs.end(), lhs.begin(), lhs.end()));
+	}
+	template <class T, class Alloc>
+	bool operator>=  (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
+		return !(ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()));
+	}	
+
 };
 #endif

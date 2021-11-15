@@ -53,20 +53,5 @@ namespace ft{
 		static const bool value = true;
 	};
 
-	/*
-	############################################################
-	*/
-	template<class T>
-	struct is_iterator
-	{
-		static const bool value = false;
-	};
-
-	template<class T>
-	struct is_iterator<Iterator<std::random_access_iterator_tag, T> >
-	{
-		static const bool value = true;
-	};
-
 };
 #endif

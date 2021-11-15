@@ -194,7 +194,6 @@ int main()
 {
 	iterator_tests();
     const_iterator_tests();
-
 	{
 		std::vector<int> std_vector(10, 20);
 		std::vector<int>::iterator it1;
