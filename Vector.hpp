@@ -22,8 +22,7 @@ namespace ft
 	typedef  __SIZE_TYPE__  l_size;
 	template<class T, class Allocator = std::allocator<T> >
 
-	class Vector
-	{
+	class Vector{
 		private:
 			T *_storage;
 			Allocator alloc;
@@ -189,14 +188,11 @@ namespace ft
 					_size = n;
 					return;
 				}
-				l_size new_capacity = std::max(_capacity, n);
+				l_size new_capacity = n;
 				pointer new_storage = alloc.allocate(new_capacity);
-				for (size_t i = 0; i < n; i++)
-				{
+				for (size_t i = 0; i < n; i++){
 					if (i < _size)
-					{
-						alloc.construct(new_storage + i, _storage[i]);
-					}
+						alloc.construct(new_storage + i, _storage[i]);					
 					else
 						alloc.construct(new_storage + i, val);
 				}
@@ -231,16 +227,16 @@ namespace ft
 				return (_storage[n]);
 			}
 			reference front(){
-					return (_storage[_size - 1]);
+					return (_storage[0]);
 			}
 			const_reference front() const{
-				return (_storage[_size - 1]);
+				return (_storage[0]);
 			}
 			reference back(){
-				return (_storage[0]);
+				return (_storage[_size - 1]);
 			}
 			const_reference back() const{
-				return (_storage[0]);
+				return (_storage[_size - 1]);
 			}
 			template <class InputIterator>
 		  	void assign (InputIterator first, InputIterator last){
@@ -481,15 +477,27 @@ namespace ft
 			}
 
 			void swap (Vector& x){
-				std::swap(x._storage, this->_storage);
-				std::swap(x._size, this->_size);
-				std::swap(x._capacity, this->_capacity);
+				T* stg = x._storage;
+				size_type _sz = x._size, _cp = x._capacity;
+
+				x._capacity = this->_capacity;
+				this->_capacity = _cp;
+				
+				x._size = this->_size;
+				this->_size = _sz;
+
+				x._storage = this->_storage;
+				this->_storage = stg;
 
 			}
 			allocator_type get_allocator() const{
 				return (alloc);
 			}
 	};
+	template <class T_V, class Alloc>
+  	void swap (Vector<T_V,Alloc>& x, Vector<T_V,Alloc>& y){
+	  x.swap(y);
+  	}
 	template <class InputIterator1, class InputIterator2>
 	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2){
 		while (first1 != last1){
@@ -534,10 +542,6 @@ namespace ft
 		return (first2!=last2);
 	}
 
-	template <class T_V, class Alloc>
-  	void swap (Vector<T_V,Alloc>& x, Vector<T_V,Alloc>& y){
-	  x.swap(y);
-  	}
 
 	template <class T, class Alloc>
   	bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){

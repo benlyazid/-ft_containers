@@ -8,15 +8,15 @@ namespace ft
 	{
 		private:
 			typedef random_access_iterator<std::random_access_iterator_tag, const T> const_iterator;
-		protected:
-			pointer current;
 		public:
 			typedef Category iterator_category ;
 			typedef T value_type ;
 			typedef Pointer pointer ;
 			typedef Reference reference ;
 			typedef Distance difference_type ;
-
+		protected:
+			pointer current;
+		public:
 			random_access_iterator(T *m_ptr) :current(m_ptr){}
 
 			random_access_iterator(const random_access_iterator  &t){
@@ -61,23 +61,23 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
-			bool operator==(const random_access_iterator  &iter) const{
-				return (this->current == iter.current);
+			friend bool operator==(const random_access_iterator  &iter1, const random_access_iterator &iter2){
+				return (iter1.current == iter2.current);
 			}
-			bool operator!=(const random_access_iterator  &iter) const{
-				return (this->current != iter.current);
+			friend bool operator!=(const random_access_iterator  &iter1, const random_access_iterator &iter2){
+				return (iter1.current != iter2.current);
 			}
-			bool operator >(const random_access_iterator &iter) const{
-				return (this->current > iter.current);
+			friend bool operator >(const random_access_iterator &iter1, const random_access_iterator &iter2){
+				return (iter1.current > iter2.current);
 			}
-			bool operator >=(const random_access_iterator &iter) const{
-				return (this->current >= iter.current);
+			friend bool operator >=(const random_access_iterator &iter1, const random_access_iterator &iter2){
+				return (iter1.current >= iter2.current);
 			}
-			bool operator <(const random_access_iterator &iter) const{
-				return (this->current < iter.current);
+			friend bool operator <(const random_access_iterator &iter1, const random_access_iterator &iter2){
+				return (iter1.current < iter2.current);
 			}
-			bool operator <=(const random_access_iterator &iter) const{
-				return (this->current <= iter.current);
+			friend bool operator <=(const random_access_iterator &iter1, const random_access_iterator &iter2){
+				return (iter1.current <= iter2.current);
 			}
 			random_access_iterator operator+(int incr)const{
 				random_access_iterator iter;

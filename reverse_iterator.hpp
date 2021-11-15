@@ -8,8 +8,6 @@ namespace ft
 	{
 		private:
 			typedef reverse_iterator <random_access_iterator <typename Iterator_::iterator_category, const typename Iterator_::value_type> > const_reverse_iterator;
-		protected:
-			iterator_type current;
 		public:
 			typedef 			Iterator_ iterator_type;
 			typedef typename	Iterator_::iterator_category iterator_category;
@@ -17,6 +15,9 @@ namespace ft
 			typedef typename 	Iterator_::difference_type difference_type;
 			typedef typename 	Iterator_::pointer pointer;
 			typedef typename 	Iterator_::reference reference;
+		protected:
+			iterator_type current;
+		public:
 			reverse_iterator() : current(NULL){
 			}
 			explicit reverse_iterator (iterator_type it) : current(it){
