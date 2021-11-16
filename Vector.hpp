@@ -30,8 +30,7 @@ namespace ft
 			l_size _capacity;
 			l_size calcule_new_capacity(l_size n)
 			{
-				l_size upgrade = 2;
-				l_size new_size = _size * upgrade;
+				l_size new_size = _capacity * 2;
 				if (new_size >= n)
 					return new_size;
 				return (n);
@@ -239,9 +238,9 @@ namespace ft
 				return (_storage[_size - 1]);
 			}
 			template <class InputIterator>
-		  	void assign (InputIterator first, InputIterator last){
+		  	void assign (InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
 				l_size new_size = last - first;
-				int index = 0;
+				l_size index = 0;
 				if (_capacity >=  new_size)
 				{
 					while (first != last)
@@ -278,7 +277,7 @@ namespace ft
 			void assign (l_size n, const value_type& val){
 
 				l_size new_size = n;
-				int index = 0;
+				l_size index = 0;
 				if (_capacity >=  new_size)
 				{
 					while (index < n)
@@ -376,14 +375,14 @@ namespace ft
 				}
 			}
 			void insert (iterator position_iter, l_size	 n, const value_type& val){
-				l_size old_index, position, new_index, new_capacity;
-				position = position = position_iter  - this->begin();
+				l_size position, new_capacity;
+				position  = position_iter  - this->begin();
 				if (_capacity >= _size + n){
-					for(l_size index = _size - 1; index >= position; index--){
-						if (index < _size){
+					for(int index = _size - 1; index >= 0; index--){
+						if (index < (int)_size){
 							alloc.construct(_storage + index + n, _storage[index]);
 							alloc.destroy(_storage + index);
-						}
+						 }
 					}
 					for(l_size index = 0; index < n; index++) {
 						alloc.construct(_storage + position + index, val);
@@ -496,7 +495,7 @@ namespace ft
 	};
 	template <class T_V, class Alloc>
   	void swap (Vector<T_V,Alloc>& x, Vector<T_V,Alloc>& y){
-	  x.swap(y);
+		x.swap(y);
   	}
 	template <class InputIterator1, class InputIterator2>
 	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2){
@@ -535,7 +534,7 @@ namespace ft
 		while (first1!=last1){
 			if (first2==last2 || *first2<*first1) 
 				return false;
-			else if (comp(*first1, first2))
+			else if (comp(*first1, *first2))
 				return true;
 			++first1; ++first2;
 		}

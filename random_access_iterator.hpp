@@ -56,28 +56,34 @@ namespace ft
 				current--;
 				return (*this);
 			}
+
+			random_access_iterator base(){
+				return (*this);
+			}
 			random_access_iterator operator--(int){
 				random_access_iterator tmp = *this;
 				--(*this);
 				return tmp;
 			}
-			friend bool operator==(const random_access_iterator  &iter1, const random_access_iterator &iter2){
-				return (iter1.current == iter2.current);
+
+			bool operator==(const random_access_iterator  &iter){
+				return (this->current == iter.current);
+
 			}
-			friend bool operator!=(const random_access_iterator  &iter1, const random_access_iterator &iter2){
-				return (iter1.current != iter2.current);
+			bool operator!=(const random_access_iterator  &iter){
+				return (this->current != iter.current);
 			}
-			friend bool operator >(const random_access_iterator &iter1, const random_access_iterator &iter2){
-				return (iter1.current > iter2.current);
+			bool operator >(const random_access_iterator &iter){
+				return (this->current > iter.current);
 			}
-			friend bool operator >=(const random_access_iterator &iter1, const random_access_iterator &iter2){
-				return (iter1.current >= iter2.current);
+			bool operator >=(const random_access_iterator &iter){
+				return (this->current >= iter.current);
 			}
-			friend bool operator <(const random_access_iterator &iter1, const random_access_iterator &iter2){
-				return (iter1.current < iter2.current);
+			bool operator <(const random_access_iterator &iter){
+				return (this->current < iter.current);
 			}
-			friend bool operator <=(const random_access_iterator &iter1, const random_access_iterator &iter2){
-				return (iter1.current <= iter2.current);
+			bool operator <=(const random_access_iterator &iter){
+				return (this->current <= iter.current);
 			}
 			random_access_iterator operator+(int incr)const{
 				random_access_iterator iter;
