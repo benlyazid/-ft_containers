@@ -22,9 +22,6 @@ namespace ft
 			random_access_iterator(const random_access_iterator  &t){
 				*this = t;
 			}
-			random_access_iterator(const_iterator  &t){
-				*this = t;
-			}
 			operator const_iterator(){
 				return const_iterator(this->current);
 			}
@@ -65,25 +62,29 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
-
-			bool operator==(const random_access_iterator  &iter){
-				return (this->current == iter.current);
-
+			template <class it_1, class it_2>
+			friend bool operator==(const it_1  &iter, const it_2 &iter2){
+				return (iter.current == iter2.current);
 			}
-			bool operator!=(const random_access_iterator  &iter){
-				return (this->current != iter.current);
+			template <class it_1, class it_2>
+			friend bool operator!=(const it_1  &iter, const it_2 &iter2){
+				return (iter.current != iter2.current);
 			}
-			bool operator >(const random_access_iterator &iter){
-				return (this->current > iter.current);
+			template <class it_1, class it_2>
+			friend bool operator >(const it_1  &iter, const it_2 &iter2){
+				return (iter.current > iter2.current);
 			}
-			bool operator >=(const random_access_iterator &iter){
-				return (this->current >= iter.current);
+			template <class it_1, class it_2>
+			friend bool operator >=(const it_1  &iter, const it_2 &iter2){
+				return (iter.current >= iter2.current);
 			}
-			bool operator <(const random_access_iterator &iter){
-				return (this->current < iter.current);
+			template <class it_1, class it_2>
+			friend bool operator <(const it_1  &iter, const it_2 &iter2){
+				return (iter.current < iter2.current);
 			}
-			bool operator <=(const random_access_iterator &iter){
-				return (this->current <= iter.current);
+			template <class it_1, class it_2>
+			friend bool operator <=(const it_1  &iter, const it_2 &iter2){
+				return (iter.current <= iter2.current);
 			}
 			random_access_iterator operator+(int incr)const{
 				random_access_iterator iter;
@@ -108,7 +109,6 @@ namespace ft
 			friend random_access_iterator operator+(int number, const random_access_iterator& iter){
 				return (iter.current + number);
 			}
-
 			reference operator[](__SIZE_TYPE__ index){
 				return this->current[index];
 			}

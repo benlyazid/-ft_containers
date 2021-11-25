@@ -1,0 +1,194 @@
+ * 200
+ 0 200
+ 1 190
+ 2 180
+ 3 170
+	======================>[1;31m init and iterators tests [0m<============================ 
+1
+0
+
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+	======================>[1;31m member functions tests [0m<============================ 
+4611686018427387903
+Capacity: 8
+ft  :: 0 20 40 60 80 
+Capacity: 50
+ft  :: 0 20 40 60 80 
+Capacity:  50
+19
+9
+vect 2 Capacity : 50
+Capacity:  : 25
+Size: 5
+ft  :: 0 20 40 60 80 
+ft  :: 0 0 0 0 0 0 0 0 0 0 
+Capacity:  : 25
+Size: 10
+ft  :: 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 
+Capacity:  : 25
+Size: 20
+ft  :: 0 0 0 0 0 0 0 0 0 0 0 1 
+Capacity:  : 20
+Size: 12
+
+
+800
+ft  :: 20 10 100 900 800 
+ft capacity : 8
+ft size :5
+
+ft  :: 20 10 100 900 800 
+check done  : 6    8
+ft  :: 55 20 10 100 900 800 
+ft  :: 55 190 20 10 100 900 800 
+ft capacity :  8
+ft size :      7
+
+new 3 ft capacity : 10
+new 3 ft size :5
+
+insert  :7
+
+ft  :: 55 190 20 10 100 900 800 0 10 20 30 40 
+new 3 ft capacity : 20
+new 3 ft size :12
+
+30
+10
+ft  :: 55 190 20 
+ft capacity : 20
+ft size :3
+
+iter 3
+print new4
+
+ft  :: 55 190 20 
+ft capacity : 20
+ft size :3
+
+ft  :: 55 190 20 3333 20 30 3333 
+ft capacity : 20
+ft size :7
+print new3
+
+ft  :: 55 190 20 
+ft capacity : 20
+ft size :3
+ft  :: 
+ft capacity : 20
+ft size :0
+
+ft  :: 55 190 20 
+ft  :: 55 190 20 10 100 900 800 
+
+ft  :: 55 190 20 
+ft  :: 55 190 20 10 100 900 800 
+ft size :3
+ft capacity : 20
+ft  :: 55 190 20 10 10 10 10 10 10 10 10 10 
+ft size :12
+ft capacity : 20
+ft  :: 55 190 20 10 10 10 10 10 10 10 10 10 6 
+ft size :13
+ft capacity : 20
+	======================>[1;31m Non-member functions tests [0m<============================ 
+
+not equal 
+foo is less than bar
+foo is less than or equal bar
+bar is greater than foo
+The contents of both sequences are equal.
+The contents of both sequences differ.
+
+Comparing foo1 and bar1 lexicographically (foo1<bar1):
+Using default comparison (operator<): true
+Using mycomp as comparison object: false
+	======================>[1;31m iteartors && rev_iterators arithmetic operations tests [0m<============================ 
+
+ft  :: 55 190 20 10 10 10 10 10 10 10 10 10 6 
+ft::size  :13 ft::capacity  :20
+
+equal 
+10
+55
+10
+190
+20
+20
+
+10
+10
+10
+190
+190
+13
+
+true
+false
+true
+false
+55
+10
+
+ft  :: 55 190 20 10 10 10 10 10 10 10 10 10 6 
+equal 
+10
+6
+10
+10
+10
+10
+10
+10
+10
+6
+
+3 0
+0 0
+* 0
+ft  :: 55 190 22 33 44 10 10 10 10 10 10 10 6 
+chek this line 
+190
+10
+
+false
+false
+true
+true
+true
+false
+44
+-13
+	======================>[1;31m STACK tests [0m<============================ 
+
+40
+40
+40
+40
+true
+400
+400
+400
+400
+
+false
+true
+false
+false
+true
+true
+true
+true
+false
+false
+done 
+

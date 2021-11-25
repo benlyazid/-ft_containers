@@ -61,7 +61,7 @@ namespace ft{
 					}
 			    }
 				else{
-			        if(!head->left){
+					if(!head->left){
 						head->left_h++;
 						std::cout << "insert in left of : "  << head->key << "  key : " << new_key << std::endl;
 						head->left = node_allocator.allocate(1);
@@ -76,18 +76,22 @@ namespace ft{
 				}
 				if (abs(head->right_h - head->left_h) > 1){
 					std::cout << "node with key " << head->key << " is not balanced With " << head->right_h << " in right and " << head->left_h << " in left ."  << std::endl;
-					type_of_balance(head);
+					std::string type = type_of_rotation(head);
+					// std::cout << "before balancing check for head with value " << head->key << " and right " << head->right->key << " and left " << head->left->key << std::endl;
+					head = balance(head, type);
+					std::cout << "after balncing check for head with value " << head->key << " and right " << head->right->key << " and left " << head->left->key << std::endl;
 				}
 				return update_height;
 			}
-
-			void	type_of_balance(NODE *head){
+			
+			std::string	type_of_rotation(NODE *head){
 				std::string type = "";
 				if (head->right_h > head->left_h){
 					type += "R";
-					if (head->right && head->right->right_h > head->right->left_h)
-						type += "R";
-					else
+					// if (head->right && head->right->right_h > head->right->left_h)
+					if (head->right && head->right->right_h <= head->right->left_h)
+						//type += "R";
+					// else
 						type += "L";
 				}
 				else{
@@ -98,6 +102,55 @@ namespace ft{
 						type += "L";
 				}
 				std::cout << "type of rotation is " << type << std::endl;
+				return (type);
+			}
+			
+			NODE *balance(NODE *head, std::string type){
+				NODE *new_node;
+				if (type.length() == 1 && type == "L")
+					new_node = right_rotation(head);
+				else if  (type.length() == 1 && type == "R")
+					new_node = left_rotation(head);
+				else if (type.length() == 2 && type == "RL"){
+					new_node = left_rotation(head->right);
+					head->right = new_node;
+					new_node = right_rotation(head);
+				}
+				else if (type.length() == 2 && type == "LR"){
+					new_node = right_rotation(head->right);
+					head->right = new_node;
+					new_node = right_rotation(head);
+				}
+				return (new_node);
+
+			}
+			
+			NODE *right_rotation(NODE *head){
+				NODE *new_head;
+				new_head = node_allocator.allocate(1);
+				new_head->insert(head->left->key, head->left->value, head->parent);
+				new_head->left = head->left->left;
+				new_head->right = head;
+				new_head->right->left = head->left->right;
+				return (new_head);
+			}
+			NODE *left_rotation(NODE *head){
+				
+				NODE *new_head;
+				new_head = node_allocator.allocate(1);
+				new_head->insert(head->right->key, head->right->value, head->parent);
+				new_head->right =  head->right->right;
+				new_head->left = head;
+				new_head->left->right = head->right->left;
+				return (new_head);
+			}
+			void print_map(NODE *head)
+			{
+				if (!head)
+					return;
+				std::cout << " node with key " << head->key ;
+				print_map(head->right);	
+				print_map(head->left);
 			}
     };
 }
