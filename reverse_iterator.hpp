@@ -22,23 +22,26 @@ namespace ft
 			}
 			explicit reverse_iterator (iterator_type it) : current(it){
 			}
+
 			template <class Iter>
 			reverse_iterator (const reverse_iterator<Iter>& rev_it){
 				this->current = rev_it.base();
 			}
+			
 			reverse_iterator& operator=(reverse_iterator const &r_it){
 				if (this == &r_it)
 					return (*this);
 				this->current = r_it.current;
 				return (*this);
 			}
+
 			reference operator*(){
 				return *(current - 1);
 			}
-			operator const_reverse_iterator(){
+			// operator const_reverse_iterator() {
 
-				return const_reverse_iterator(this->current);
-			}
+			// 	return const_reverse_iterator(this->current);
+			// }
 			iterator_type base() const{
 				return  current;
 			}
