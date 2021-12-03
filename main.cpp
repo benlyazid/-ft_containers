@@ -71,10 +71,13 @@ int main()
 	//std::cout << "key is " << tree.node->key << std::endl;
 	tree.add_node(100, 120, (tree.node));
 	tree.add_node(120, 120, (tree.node));
-	tree.add_node(80, 120, (tree.node));
-	tree.add_node(140, 120, (tree.node));
+	//tree.add_node(80, 120, (tree.node));
 	tree.add_node(110, 120, (tree.node));
-	tree.add_node(115, 120, (tree.node));
+	// tree.add_node(110, 120, (tree.node));
+	// tree.add_node(60, 120, (tree.node));
+	// tree.add_node(90, 120, (tree.node));
+	// 	tree.remove_node(tree.node, 80);
+	// tree.add_node(160, 120, (tree.node));
 	//tree.add_node(180, 120, (tree.node));
 	// tree.add_node(110, 90, (tree.node));
 	// tree.add_node(60, 90, (tree.node));

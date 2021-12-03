@@ -40,10 +40,10 @@ namespace ft{
 			typename Allocator::template rebind<NODE>::other node_allocator;
 			Compare compare;
 			NODE *node;
-			NODE *head;
-		public:
-			Avl(): node(NULL){
-			}
+			//NODE *head;
+			public:
+			// Avl(): node(NULL){
+			// }
 		
 			int max_hight(NODE *node){
 				int m1 = 0;
@@ -157,7 +157,7 @@ namespace ft{
 				head->right_h = max_hight(head->right);
 			}
 			
-			void left_rotation(NODE* &head){
+			void	left_rotation(NODE* &head){
 
 				NODE *temp_head_right = head->right;
 				NODE *temp_head_parent = head->parent;
@@ -175,7 +175,61 @@ namespace ft{
 				head->left->right_h =  max_hight(head->left->right);
 				head->left_h = max_hight(head->left);
 			}
-
+			
+			void	swap_node_with_in_order_successor(NODE* &head){
+				NODE *temp_head = head;
+				head = head->left;
+				KEY temp_successor_key;
+				while (head->right){
+					head = head->right;
+				}
+				//head->key = in_order_successor->key;
+				//in_order_successor->key = temp_head->key;
+				temp_successor_key = head->key;
+				head->key = temp_head->key;
+				temp_head->key = temp_successor_key;
+				head = temp_head;
+				std::cout << "check done " << std::endl;
+				std::cout << " head key : " << head->key << " head left key : " << head->left->key << " head right key : " << head->right->key << std::endl;
+			}
+			void remove_node(NODE* &node, KEY key){
+				if (node == NULL)
+					return;
+				std::cout << "enter with key " << node->key << "left_h : "<< node->left_h << "right_h : " << node->right_h<< std::endl;
+				if (node->key < key)
+					remove_node(node->right, key);
+				else if (node->key > key)
+					remove_node(node->left, key);
+				else{
+					if (node->left_h == 0 && node->right_h == 0){
+						node_allocator.destroy(node);
+						node_allocator.deallocate(node, 1);
+						node = NULL;
+					}
+					else if (node->left_h == 0 || node->right_h == 0){
+						NODE *temp = node->left ? node->left : node->right;
+						temp->parent = node->parent;
+						node_allocator.destroy(node);
+						node_allocator.deallocate(node, 1);
+						if (node->parent && node->parent->key < node->key){
+							node->parent->right = temp;
+						}
+						else if (node->parent && node->parent->key > node->key){
+							node->parent->left = temp;
+						}
+					}
+					else if (node->left_h && node->right_h){
+						swap_node_with_in_order_successor(node);
+						remove_node(node->left, key);
+					}
+				}
+				if (!node)
+					return ;
+				node->right_h = max_hight(node->right);
+				node->left_h = max_hight(node->left);
+				check_balance(node);
+			}
+			
 			void print_node_info(NODE *head){
 				if (!head){
 					std::cout << "THIS NODE IS NULL " << std::endl;
@@ -200,6 +254,8 @@ namespace ft{
 				if (head->left)
 					print_node_info(head->left);
 			}
+			
+
     };
 }
 #endif
