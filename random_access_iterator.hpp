@@ -17,11 +17,13 @@ namespace ft
 		protected:
 			pointer current;
 		public:
-			random_access_iterator(T *m_ptr) :current(m_ptr){}
+			random_access_iterator(T *m_ptr) :current(m_ptr){
+			}
 
 			random_access_iterator(const random_access_iterator  &t){
 				*this = t;
 			}
+			
 			operator const_iterator(){
 				return const_iterator(this->current);
 			}
@@ -54,50 +56,62 @@ namespace ft
 				return (*this);
 			}
 
-			random_access_iterator base(){
+			random_access_iterator& base(){
 				return (*this);
 			}
+			
 			random_access_iterator operator--(int){
 				random_access_iterator tmp = *this;
 				--(*this);
 				return tmp;
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator==(const it_1  &iter, const it_2 &iter2){
 				return (iter.current == iter2.current);
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator!=(const it_1  &iter, const it_2 &iter2){
 				return (iter.current != iter2.current);
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator >(const it_1  &iter, const it_2 &iter2){
 				return (iter.current > iter2.current);
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator >=(const it_1  &iter, const it_2 &iter2){
 				return (iter.current >= iter2.current);
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator <(const it_1  &iter, const it_2 &iter2){
 				return (iter.current < iter2.current);
 			}
+
 			template <class it_1, class it_2>
 			friend bool operator <=(const it_1  &iter, const it_2 &iter2){
 				return (iter.current <= iter2.current);
 			}
+
 			random_access_iterator operator+(int incr)const{
 				random_access_iterator iter;
 				iter = *this;
 				iter.current += incr;
 				return iter;
 			}
+
 			random_access_iterator operator-(int incr)const{
 				return (this->current - incr);
 			}
-			int operator-(random_access_iterator  const &iter) const{
-				return (this->current - iter.current);
+
+			template <class it_1, class it_2>
+			friend long long operator-(random_access_iterator<Category, it_1>  const &iter, random_access_iterator<Category, it_2> const &iter2){
+				return (iter.current - iter2.current);
 			}
+
 			random_access_iterator& operator -=(int incr){
 				this->current -= incr;
 				return *this;
@@ -106,7 +120,9 @@ namespace ft
 				this->current += incr;
 				return *this;
 			}
-			friend random_access_iterator operator+(int number, const random_access_iterator& iter){
+			template <class it_1>
+			
+			friend random_access_iterator operator+(int number, const random_access_iterator<Category, it_1> & iter){
 				return (iter.current + number);
 			}
 			reference operator[](__SIZE_TYPE__ index){

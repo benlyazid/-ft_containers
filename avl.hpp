@@ -4,7 +4,7 @@ namespace ft{
 
 	template <class KEY, class T, class Compare = std::less<KEY>, class Allocator = std::allocator<std::pair<const KEY, T> > >
     class Avl{
-		private:
+		public:
 			struct NODE
 			{
 				KEY  	key;
@@ -25,7 +25,6 @@ namespace ft{
 					this->left_h = 0;
 				}
 				NODE(const NODE* &origen){
-					std::cout << "copy  " << std::endl;
 					key = origen->key;
 					value = origen->value;
 					left = origen->left;
@@ -34,6 +33,93 @@ namespace ft{
 					right_h = origen->right_h;
 					left_h = origen->left_h;
 				}
+				NODE *next_node(NODE *head){
+					NODE *temp = head;
+					if(head->right == NULL){
+						if (head->parent){
+							if (head->key > head->parent->key){
+								if (head->parent->parent){
+									while (head->parent->parent && head->parent->parent->key < temp->key){
+										head = head->parent;
+									}
+									return (head->parent->parent);								
+								}
+							}
+							else{
+								return (head->parent);
+							}
+						}
+					}
+					else{
+						temp = temp->right;
+						while(temp && temp->left){
+							temp = temp->left;
+						}
+						return temp;
+					}
+					return NULL;
+				}
+				NODE *find_node(NODE *head, KEY key_to_find){
+					NODE *ret = NULL;
+					if (head->key == key_to_find )
+						return head;
+					if (head->right)
+						reet = find_node(head->right, key_to_find);
+					if (ret && ret->key == key_to_find)
+						return (ret)
+					if (head->left)
+						reet = find_node(head->left, key_to_find);
+					if (ret && ret->key == key_to_find)
+						return (ret)
+					return NULL;
+					
+				}
+				NODE *back_node(NODE *head){
+					NODE *temp = head;
+					if(head->left == NULL){
+						if (head->parent){
+							if (head->key < head->parent->key){
+								if (head->parent->parent){
+									while (head->parent->parent && head->parent->parent->key > temp->key){
+										head = head->parent;
+									}
+									return (head->parent->parent);								
+								}
+							}
+							else{
+								return (head->parent);
+							}
+						}
+					}
+					else{
+						temp = temp->left;
+						while(temp && temp->right){
+							temp = temp->right;
+						}
+						return temp;
+					}
+					return NULL;
+				}
+
+
+
+				NODE *get_the_smallest_one(NODE *head){
+					NODE *temp = head;
+					while(temp && temp->left)
+						temp = temp->left;
+					return temp;
+				}
+
+
+				NODE *get_the_beggist_one(NODE *head){
+					NODE *temp = head;
+					while(temp && temp->right)
+						temp = temp->right;
+					return temp;
+
+				}
+
+				NODE(){}
 			};
 	
         public:
@@ -78,6 +164,8 @@ namespace ft{
 			}
 
 			void	add_node(const KEY new_key, const T new_value, NODE* &head, const Compare comp = std::less<KEY>()){
+
+				
 				if (!head)
 					add_node_in_root(head, new_key, new_value);
 			    else if(comp(head->key, new_key)){
