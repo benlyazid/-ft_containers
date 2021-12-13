@@ -15,6 +15,8 @@ namespace ft{
 				int		left_h;
 				int		right_h;
 				int		diff;
+				bool	is_the_last_node;
+
 				void insert(KEY key, T value, NODE* parent){
 					this->key = key;
 					this->value = value;
@@ -23,6 +25,7 @@ namespace ft{
 					this->right = NULL;
 					this->right_h = 0;
 					this->left_h = 0;
+					this->is_the_last_node = false;
 				}
 				NODE(const NODE* &origen){
 					key = origen->key;
@@ -64,13 +67,13 @@ namespace ft{
 					if (head->key == key_to_find )
 						return head;
 					if (head->right)
-						reet = find_node(head->right, key_to_find);
+						ret = find_node(head->right, key_to_find);
 					if (ret && ret->key == key_to_find)
-						return (ret)
+						return (ret);
 					if (head->left)
-						reet = find_node(head->left, key_to_find);
+						ret = find_node(head->left, key_to_find);
 					if (ret && ret->key == key_to_find)
-						return (ret)
+						return (ret);
 					return NULL;
 					
 				}
@@ -100,17 +103,12 @@ namespace ft{
 					}
 					return NULL;
 				}
-
-
-
 				NODE *get_the_smallest_one(NODE *head){
 					NODE *temp = head;
 					while(temp && temp->left)
 						temp = temp->left;
 					return temp;
 				}
-
-
 				NODE *get_the_beggist_one(NODE *head){
 					NODE *temp = head;
 					while(temp && temp->right)
@@ -176,12 +174,15 @@ namespace ft{
 						add_node(new_key, new_value, head->right, comp);
 					}
 				}
-				else{
+				else if (comp(new_key, head->key)){
 					if(!head->left)
 						add_node_in_left(head, new_key, new_value);
 				 	else{
 						add_node(new_key, new_value, head->left, comp);
 					}
+				}
+				else{
+					return ;
 				}
 				head->right_h = max_hight(head->right);
 				head->left_h = max_hight(head->left);
@@ -271,8 +272,6 @@ namespace ft{
 				while (head->right){
 					head = head->right;
 				}
-				//head->key = in_order_successor->key;
-				//in_order_successor->key = temp_head->key;
 				temp_successor_key = head->key;
 				head->key = temp_head->key;
 				temp_head->key = temp_successor_key;
@@ -280,6 +279,7 @@ namespace ft{
 				std::cout << "check done " << std::endl;
 				std::cout << " head key : " << head->key << " head left key : " << head->left->key << " head right key : " << head->right->key << std::endl;
 			}
+			
 			void remove_node(NODE* &node, KEY key){
 				if (node == NULL)
 					return;

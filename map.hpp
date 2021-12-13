@@ -18,13 +18,15 @@ namespace ft{
 			typedef typename allocator_type::const_reference								const_reference;
 			typedef typename allocator_type::pointer										pointer;
 			typedef typename allocator_type::const_pointer									const_pointer;
-			typedef bidirectional_iterator<std::bidirectional_iterator_tag,typename 
-					ft::Avl<key_type, mapped_type>::NODE, key_type, mapped_type>			iterator;
-			typedef bidirectional_iterator<std::bidirectional_iterator_tag, const typename
-					ft::Avl<key_type, mapped_type>::NODE, key_type, mapped_type>			const_iterator;
-			// 	typedef	**********														value_compare;
-			//	typedef ***********								reverse_iterator
-			//	typedef ***********								const_reverse_iterator
+			
+			typedef bidirectional_iterator<std::bidirectional_iterator_tag, 
+					ft::Avl<key_type, mapped_type>, key_type, mapped_type, typename Avl<key_type, mapped_type>::NODE >			iterator;
+			
+			// typedef bidirectional_iterator<std::bidirectional_iterator_tag, const typename
+			// 		ft::Avl<key_type, mapped_type>::NODE, key_type, mapped_type, Avl<key_type, mapped_type> >			const_iterator;
+			// 	typedef	**********															value_compare;
+			//	typedef ***********															reverse_iterator
+			//	typedef ***********															const_reverse_iterator
 
 			map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()){
 				_key_compare = comp;
@@ -53,21 +55,29 @@ namespace ft{
 			}
 
 			iterator begin(){
-
 				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
-				return iterator(*temp);
+				
+				//std::cout << "beggin return " << temp.node->key << std::endl;
+				return iterator(&temp, 4);
 			}
 			iterator end(){
 
-				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_beggist_one(_my_tree.node);
-				return iterator(*temp);
+				// _the_last_node  = *_my_tree.node->get_the_beggist_one(_my_tree.node);
+				// _the_last_node.is_the_last_node = true;
+				// return &(_the_last_node);		
+				Avl<key_type, mapped_type> temp;
+				temp.node = _my_tree.node->get_the_beggist_one(_my_tree.node);
+				_the_last_node.is_the_last_node = true;
+				return iterator(&temp);
 			}
 
-			pair<iterator,bool> insert (const value_type& val){
-				_my_tree.add_node(val.first, val.second);
-				NODE *temp = _my_tree.node->find_node(_my_tree.node, val.first);
-				return make_pair(val.first, val.second);
+			// pair<iterator,bool> insert (const value_type& val);
+			void	insert (const value_type& val){
+				_my_tree.add_node(val.first, val.second, _my_tree.node);
+				//NODE *temp = _my_tree.node->find_node(_my_tree.node, val.first);
+				//return make_pair(iterator(*temp), );
 			}
+
 			iterator insert (iterator position, const value_type& val);
 			template <class InputIterator>
 			void insert (InputIterator first, InputIterator last);
@@ -79,6 +89,7 @@ namespace ft{
 			key_compare		_key_compare;
 			allocator_type	_allocator;
 			size_type		_size;
+			typename Avl<key_type, mapped_type>::NODE _the_last_node;
 			
 	};
 

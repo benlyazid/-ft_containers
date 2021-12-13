@@ -65,7 +65,7 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
-
+			// change this from const it_1 ... to rando....<category, it_1> 
 			template <class it_1, class it_2>
 			friend bool operator==(const it_1  &iter, const it_2 &iter2){
 				return (iter.current == iter2.current);
