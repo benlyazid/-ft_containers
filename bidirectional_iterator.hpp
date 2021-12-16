@@ -4,75 +4,76 @@
 #include "util.h"
 namespace ft
 {
-	template <class Category, class T, class Key, class V, class NOOD, class Pointer = T*, class Reference = T& >
+	template <class T, class Pointer = T*, class Reference = T& >
 	class bidirectional_iterator
 	{
-		private:
-			//typedef pair<const Key, V>	pair_type;
-			typedef bidirectional_iterator<std::bidirectional_iterator_tag, const T, Key, V, NOOD> const_iterator;
 		public:
-			typedef Category iterator_category ;
-			typedef T value_type ;
-			typedef Pointer pointer ;
-			typedef Reference reference ;
-            typedef Key     key_type;
-            typedef V       mapped_type;
-			typedef	 typename Avl<Key, V>::NODE node_t;
-        public:
-			pointer current;
-			NOOD	*_node;
+			typedef	typename	std::bidirectional_iterator_tag		iterator_category;
+			typedef 			T 									tree_t;
+			typedef typename 	tree_t::node_t 						nood_t;
+			typedef 			Pointer								pointer ;
+			typedef				Reference							reference ;
+			typedef	typename 	tree_t::key_t     					key_t;
+			typedef typename 	tree_t::mapped_t     				mapped_t;
+			typedef	typename 	Avl<key_t, mapped_t>::NODE 			node_t;
+			typedef 			pair<const key_t, mapped_t>			pair_t;
 
-			pair<key_type, mapped_type> _my_pair;
-        public:
-			bidirectional_iterator(T *m_ptr, int i) :current(ss){
-				std::cout << "construct beodirec... " << current->node->key << std::endl;
+		private:	
+			typedef 			bidirectional_iterator<const T> 	const_iterator;
+			tree_t					*current;
+			nood_t					*_node;
+			pair<key_t, mapped_t>	_my_pair;
+		
+		public:
+			bidirectional_iterator(tree_t *m_ptr, nood_t *node_ptr) :current(m_ptr), _node(node_ptr){
 			}
 
-			// bidirectional_iterator(const bidirectional_iterator  &t){
-			// 	*this = t;
-			// }
+			bidirectional_iterator(const bidirectional_iterator  &t){
+				*this = t;
+			}
 
 			bidirectional_iterator(){}
 			bidirectional_iterator& operator=(bidirectional_iterator const &t){
 				if (this == &t)
 					return *this;
 				this->current = t.current;
+				this->_node = t._node;
 				return *this;
 			}
-			// pair<key_type, mapped_type> operator*(){
-            //     ft::pair<key_type, mapped_type> p = make_pair<current->key, current->value>;
-			// 	return(p);
-			// }
-			pair<key_type, mapped_type> *operator->(){
-				std::cout << "check for -> "  << current->node->key << std::endl;
-				_my_pair.first = current->node->key;
-				_my_pair.second = current->node->value;
+		
+			pair_t operator*(){
+				_my_pair.first = _node->key;
+				_my_pair.second = _node->value;
+				return(_my_pair);
+			}
+			pair_t *operator->(){
+				_my_pair.first = _node->key;
+				_my_pair.second = _node->value;
 				return (&_my_pair);
 			}
 
 			bidirectional_iterator& operator++(){
-				node_t *temp = current->node;
-				current->node = current->node->next_node(current->node);
-				if (current->node == NULL){
-					current->node = temp;
-					current->node->is_the_last_node = true;
+				node_t *temp = _node;
+				_node = _node->next_node(_node);
+				if (_node == NULL){
+					_node = current->the_last_node;
 				}
-				//std::cout << "set_the last " << current->key  << "   " << current->is_the_last_node << std::endl;
 				return (*this);
 			}
+
 			bidirectional_iterator operator++(int){
 				bidirectional_iterator tmp = *this;
-				//current = current->next_node(current);
 				++(*this);
 				return tmp;
 			}
+
 			bidirectional_iterator& operator--(){
-				if (current->node->is_the_last_node){
-					current->node->is_the_last_node = false;
+				if (_node == current->the_last_node){
+					_node = _node->get_the_beggist_one(current->node);
 					return (*this);
 				}
 				else
-					current->node = current->node->back_node(current);
+					_node = _node->back_node(_node);
 				return (*this);
 			}
 
@@ -82,23 +83,18 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
+	
 			template <class it_1, class it_2>
 			friend bool operator==(const it_1  &iter, const it_2 &iter2){
-				if (iter.current->node == iter2.current->node)
+				if (iter._node == iter2._node)
 					return true;
 				return false;
-				/*should implement this one */
 			}
+		
 			template <class it_1, class it_2>
 			friend bool operator!=(const it_1  &iter, const it_2 &iter2){
-
-				std::cout << "compare betwwen " << iter.current->node->key << " " << " and " << iter2.current->node->key << " "  << std::endl;
-				std::cout << !(iter.current->node == iter2.current->node)<< std::endl;
 				return !(iter == iter2);
-				/*should implement this one */
-
 			}
-
 	};
 };
 #endif

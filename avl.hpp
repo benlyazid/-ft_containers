@@ -5,6 +5,10 @@ namespace ft{
 	template <class KEY, class T, class Compare = std::less<KEY>, class Allocator = std::allocator<std::pair<const KEY, T> > >
     class Avl{
 		public:
+			typedef KEY key_t;
+			typedef T 	mapped_t;
+			Compare 	compare;
+
 			struct NODE
 			{
 				KEY  	key;
@@ -15,7 +19,6 @@ namespace ft{
 				int		left_h;
 				int		right_h;
 				int		diff;
-				bool	is_the_last_node;
 
 				void insert(KEY key, T value, NODE* parent){
 					this->key = key;
@@ -25,8 +28,8 @@ namespace ft{
 					this->right = NULL;
 					this->right_h = 0;
 					this->left_h = 0;
-					this->is_the_last_node = false;
 				}
+				
 				NODE(const NODE* &origen){
 					key = origen->key;
 					value = origen->value;
@@ -36,13 +39,16 @@ namespace ft{
 					right_h = origen->right_h;
 					left_h = origen->left_h;
 				}
+	
 				NODE *next_node(NODE *head){
 					NODE *temp = head;
 					if(head->right == NULL){
 						if (head->parent){
-							if (head->key > head->parent->key){
+							// if (head->key > head->parent->key){
+							if (compare(head->parent->key, head->key)){
 								if (head->parent->parent){
-									while (head->parent->parent && head->parent->parent->key < temp->key){
+									// while (head->parent->parent && (head->parent->parent->key < temp->key)){
+									while (head->parent->parent && compare(head->parent->parent->key, temp->key)){
 										head = head->parent;
 									}
 									return (head->parent->parent);								
@@ -62,28 +68,43 @@ namespace ft{
 					}
 					return NULL;
 				}
+
+				// NODE *find_node(NODE *head, KEY key_to_find){
+				// 	NODE *ret = NULL;
+				// 	if (head->key == key_to_find )
+				// 		return head;
+				// 	if (head->right)
+				// 		ret = find_node(head->right, key_to_find);
+				// 	if (ret && ret->key == key_to_find)
+				// 		return (ret);
+				// 	if (head->left)
+				// 		ret = find_node(head->left, key_to_find);
+				// 	if (ret && ret->key == key_to_find)
+				// 		return (ret);
+				// 	return NULL;					
+				// }
+	
 				NODE *find_node(NODE *head, KEY key_to_find){
 					NODE *ret = NULL;
-					if (head->key == key_to_find )
+
+					if (!compare(head->key, key_to_find) && !compare(key_to_find, head->key))
 						return head;
-					if (head->right)
-						ret = find_node(head->right, key_to_find);
-					if (ret && ret->key == key_to_find)
-						return (ret);
-					if (head->left)
-						ret = find_node(head->left, key_to_find);
-					if (ret && ret->key == key_to_find)
-						return (ret);
-					return NULL;
-					
+					if (head->right && compare(head->key, key_to_find))
+						return find_node(head->right, key_to_find);
+					if (head->left && compare(key_to_find, head->key))
+						return find_node(head->left, key_to_find);
+					return NULL;					
 				}
+
 				NODE *back_node(NODE *head){
 					NODE *temp = head;
 					if(head->left == NULL){
 						if (head->parent){
-							if (head->key < head->parent->key){
+							// if (head->key < head->parent->key){
+							if (compare(head->key, head->parent->key)){
 								if (head->parent->parent){
-									while (head->parent->parent && head->parent->parent->key > temp->key){
+									// while (head->parent->parent && head->parent->parent->key > temp->key){
+									while (head->parent->parent && compare( temp->key, head->parent->parent->key)){
 										head = head->parent;
 									}
 									return (head->parent->parent);								
@@ -103,12 +124,14 @@ namespace ft{
 					}
 					return NULL;
 				}
+				
 				NODE *get_the_smallest_one(NODE *head){
 					NODE *temp = head;
 					while(temp && temp->left)
 						temp = temp->left;
 					return temp;
 				}
+				
 				NODE *get_the_beggist_one(NODE *head){
 					NODE *temp = head;
 					while(temp && temp->right)
@@ -121,14 +144,19 @@ namespace ft{
 			};
 	
         public:
+			typedef NODE node_t;
 			typename Allocator::template rebind<NODE>::other node_allocator;
-			Compare compare;
 			NODE *node;
-			//NODE *head;
+			NODE *the_last_node;
+			size_t avl_size;
+
 			public:
-			// Avl(): node(NULL){
-			// }
-		
+			Avl(){
+				std::cout<< "AVL CONSTRUCT " << std::endl;
+				avl_size = 0;
+				the_last_node = node_allocator.allocate(1);
+			}
+
 			int max_hight(NODE *node){
 				int m1 = 0;
 				int m2 = 0;
@@ -140,45 +168,43 @@ namespace ft{
 			}
 
 			void	add_node_in_right(NODE* &head, const KEY new_key, const T new_value){
-				std::cout << "insert in right of : " << head->key << "  key : " << new_key << std::endl;
+				avl_size++;
 				head->right = node_allocator.allocate(1);
 				head->right_h++;
 				head->right->insert(new_key, new_value, head);
 			}
 
 			void	add_node_in_left(NODE* &head, const KEY new_key, const T new_value){
+				avl_size++;
 				head->left = node_allocator.allocate(1);
 				head->left_h++;
-				std::cout << "insert in left of : "  << head->key << "  key : " << new_key << std::endl;
 				head->left->insert(new_key, new_value, head);
 			}
 
 			void	add_node_in_root(NODE* &head, const KEY new_key, const T new_value){
-				std::cout << "insert in root key : " << new_key << std::endl;
+				avl_size++;
 				head = node_allocator.allocate(1);
 				head->left_h = 0;
 				head->right_h = 0;
 				head->insert(new_key, new_value, NULL);
 			}
 
-			void	add_node(const KEY new_key, const T new_value, NODE* &head, const Compare comp = std::less<KEY>()){
-
-				
+			void	add_node(const KEY new_key, const T new_value, NODE* &head){		
 				if (!head)
 					add_node_in_root(head, new_key, new_value);
-			    else if(comp(head->key, new_key)){
+			    else if(compare(head->key, new_key)){
 			        if(!head->right){
 						add_node_in_right(head, new_key, new_value);
 			        }
 				 	else{
-						add_node(new_key, new_value, head->right, comp);
+						add_node(new_key, new_value, head->right);
 					}
 				}
-				else if (comp(new_key, head->key)){
+				else if (compare(new_key, head->key)){
 					if(!head->left)
 						add_node_in_left(head, new_key, new_value);
 				 	else{
-						add_node(new_key, new_value, head->left, comp);
+						add_node(new_key, new_value, head->left);
 					}
 				}
 				else{
@@ -191,7 +217,6 @@ namespace ft{
 			
 			void	check_balance(NODE* &head){
 				if (abs(head->right_h - head->left_h) > 1){
-					std::cout << "node with key " << head->key << " is not balanced With " << head->right_h << " in right and " << head->left_h << " in left ."  << std::endl;
 					std::string type = type_of_rotation(head);
 					balance(head, type);
 				}
@@ -209,7 +234,7 @@ namespace ft{
 					if (head->left && head->left->right_h > head->left->left_h)
 						type = "LR";
 				}
-				std::cout << "type of rotation is " << type << std::endl;
+				//std::cout << "type of rotation is " << type << std::endl;
 				return (type);
 			}
 			
@@ -276,17 +301,18 @@ namespace ft{
 				head->key = temp_head->key;
 				temp_head->key = temp_successor_key;
 				head = temp_head;
-				std::cout << "check done " << std::endl;
-				std::cout << " head key : " << head->key << " head left key : " << head->left->key << " head right key : " << head->right->key << std::endl;
+				// std::cout << "check done " << std::endl;
+				//std::cout << " head key : " << head->key << " head left key : " << head->left->key << " head right key : " << head->right->key << std::endl;
 			}
 			
 			void remove_node(NODE* &node, KEY key){
 				if (node == NULL)
 					return;
-				std::cout << "enter with key " << node->key << "left_h : "<< node->left_h << "right_h : " << node->right_h<< std::endl;
-				if (node->key < key)
+				// if (node->key < key)
+				else if (compare(node->key, key))
 					remove_node(node->right, key);
-				else if (node->key > key)
+				// else if (node->key > key)
+				else if (compare(key, node->key))
 					remove_node(node->left, key);
 				else{
 					if (node->left_h == 0 && node->right_h == 0){
@@ -299,10 +325,12 @@ namespace ft{
 						temp->parent = node->parent;
 						node_allocator.destroy(node);
 						node_allocator.deallocate(node, 1);
-						if (node->parent && node->parent->key < node->key){
+						//if node->parent->key < node->key)
+						if (node->parent && compare(node->parent->key, node->key)){
 							node->parent->right = temp;
 						}
-						else if (node->parent && node->parent->key > node->key){
+						//if (node->parent->key > node->key)
+						else if (node->parent && compare(node->key, node->parent->key)){
 							node->parent->left = temp;
 						}
 					}

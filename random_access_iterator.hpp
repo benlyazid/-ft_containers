@@ -25,14 +25,15 @@ namespace ft
 			}
 			
 			operator const_iterator(){
-				return const_iterator(this->current);
+			 	std::cout << "JHDGFKDGH" << std::endl;
+			   	return const_iterator(this->current);
 			}
 
 			random_access_iterator(){}
 			random_access_iterator& operator=(random_access_iterator const &t){
-				if (this == &t)
-					return *this;
-				this->current = t.current;
+				// if (this == &t)
+				// 	return *this;
+				// this->current = t.current;
 				return *this;
 			}
 			reference operator*(){

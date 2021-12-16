@@ -28,6 +28,17 @@ using namespace ft;
 int main()
 {
 
+	ft::map<int, int> my_map__;
+	my_map__.end();
+	return 0;
+
+
+
+
+
+
+
+	
 	std::map<int, int>std__map;
 	std__map[100] = 100;
 	std__map[80] = 100;
@@ -66,11 +77,11 @@ int main()
 	std::map<int, int>::iterator std_it_2(std__map_2.begin());
 	std::cout << (std_it == std_it) << std::endl;
 
-	// std::map<int, int>::iterator it_begin (std__map.begin());
-	// while (it_begin !=  std__map.end()){
-	// 	std::cout << (it_begin)->first << std::endl;
-	// 	it_begin++;
-	// }
+	std::map<int, int>::iterator std_it_begin (std__map.begin());
+	while (std_it_begin !=  std__map.end()){
+		std::cout << (std_it_begin)->first << std::endl;
+		std_it_begin++;
+	}
 	//return 1;
 	ft::map<int, int>my_map;
 	pair<int, int>pr(80, 100);
@@ -91,14 +102,38 @@ int main()
 	my_map.insert(make_pair(40, 100));
 
 	std::cout << "*********************" << std::endl;
-	ft::map<int, int>::iterator it;
-	it = my_map.begin();
-	//std::cout << "at begin " << it->first << std::endl;
-	// while(it != (my_map.end())){
-	// 	std::cout << (it)->first << std::endl;
-	// 	it++;
-	// }
+	ft::map<int, int>::iterator it_begin;
+	ft::map<int, int>::iterator it_end;
+	std::map<int, int>::iterator std_it__;
+	it_begin = my_map.begin();
+	it_end = my_map.end();
 
-	//std::cout << (it)->first << std::endl;
-	return 0;
+	// std::cout << "************************" << std::endl;
+	std::cout << "at begin " << (*it_begin).first << std::endl;
+	// std::cout << "at end " << it_end->first << std::endl;
+
+	// it_end--;
+	// while(it_begin != it_end){
+	// 	std::cout << (it_end)->first << std::endl;
+	// 	it_end--;
+	// }
+	
+	// std::cout << (it_end)->first << std::endl;
+	// return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
