@@ -19,6 +19,7 @@ namespace ft{
 				int		left_h;
 				int		right_h;
 				int		diff;
+				Compare 	compare;
 
 				void insert(KEY key, T value, NODE* parent){
 					this->key = key;
@@ -45,10 +46,10 @@ namespace ft{
 					if(head->right == NULL){
 						if (head->parent){
 							// if (head->key > head->parent->key){
-							if (compare(head->parent->key, head->key)){
+							if (this->compare(head->parent->key, head->key)){
 								if (head->parent->parent){
 									// while (head->parent->parent && (head->parent->parent->key < temp->key)){
-									while (head->parent->parent && compare(head->parent->parent->key, temp->key)){
+									while (head->parent->parent && this->compare(head->parent->parent->key, temp->key)){
 										head = head->parent;
 									}
 									return (head->parent->parent);								
@@ -87,11 +88,11 @@ namespace ft{
 				NODE *find_node(NODE *head, KEY key_to_find){
 					NODE *ret = NULL;
 
-					if (!compare(head->key, key_to_find) && !compare(key_to_find, head->key))
+					if (!this->compare(head->key, key_to_find) && !this->compare(key_to_find, head->key))
 						return head;
-					if (head->right && compare(head->key, key_to_find))
+					if (head->right && this->compare(head->key, key_to_find))
 						return find_node(head->right, key_to_find);
-					if (head->left && compare(key_to_find, head->key))
+					if (head->left && this->compare(key_to_find, head->key))
 						return find_node(head->left, key_to_find);
 					return NULL;					
 				}
@@ -101,10 +102,10 @@ namespace ft{
 					if(head->left == NULL){
 						if (head->parent){
 							// if (head->key < head->parent->key){
-							if (compare(head->key, head->parent->key)){
+							if (this->compare(head->key, head->parent->key)){
 								if (head->parent->parent){
 									// while (head->parent->parent && head->parent->parent->key > temp->key){
-									while (head->parent->parent && compare( temp->key, head->parent->parent->key)){
+									while (head->parent->parent && this->compare( temp->key, head->parent->parent->key)){
 										head = head->parent;
 									}
 									return (head->parent->parent);								
@@ -149,10 +150,10 @@ namespace ft{
 			NODE *node;
 			NODE *the_last_node;
 			size_t avl_size;
+			ft::pair<int, int> *__pair;
 
 			public:
 			Avl(){
-				std::cout<< "AVL CONSTRUCT " << std::endl;
 				avl_size = 0;
 				the_last_node = node_allocator.allocate(1);
 			}
@@ -189,30 +190,37 @@ namespace ft{
 				head->insert(new_key, new_value, NULL);
 			}
 
-			void	add_node(const KEY new_key, const T new_value, NODE* &head){		
-				if (!head)
+			pair<NODE*, bool> add_node(const KEY new_key, const T new_value, NODE* &head){		
+				pair<NODE*, bool> pait_to_return;
+				if (!head){
 					add_node_in_root(head, new_key, new_value);
+					pait_to_return = (make_pair(head, true));
+				}
 			    else if(compare(head->key, new_key)){
 			        if(!head->right){
 						add_node_in_right(head, new_key, new_value);
+						pait_to_return = (make_pair(head->right, true));
 			        }
 				 	else{
-						add_node(new_key, new_value, head->right);
+						pait_to_return = (add_node(new_key, new_value, head->right));
 					}
 				}
 				else if (compare(new_key, head->key)){
-					if(!head->left)
+					if(!head->left){
 						add_node_in_left(head, new_key, new_value);
+						pait_to_return = (make_pair(head->left, true));
+					}
 				 	else{
-						add_node(new_key, new_value, head->left);
+						pait_to_return = (add_node(new_key, new_value, head->left));
 					}
 				}
 				else{
-					return ;
+					pait_to_return = (make_pair(head, false));
 				}
 				head->right_h = max_hight(head->right);
 				head->left_h = max_hight(head->left);
 				check_balance(head);
+				return (pait_to_return);
 			}
 			
 			void	check_balance(NODE* &head){
@@ -319,6 +327,7 @@ namespace ft{
 						node_allocator.destroy(node);
 						node_allocator.deallocate(node, 1);
 						node = NULL;
+						avl_size--;
 					}
 					else if (node->left_h == 0 || node->right_h == 0){
 						NODE *temp = node->left ? node->left : node->right;
@@ -333,6 +342,7 @@ namespace ft{
 						else if (node->parent && compare(node->key, node->parent->key)){
 							node->parent->left = temp;
 						}
+						avl_size--;
 					}
 					else if (node->left_h && node->right_h){
 						swap_node_with_in_order_successor(node);

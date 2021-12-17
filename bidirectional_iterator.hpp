@@ -16,16 +16,15 @@ namespace ft
 			typedef	typename 	tree_t::key_t     					key_t;
 			typedef typename 	tree_t::mapped_t     				mapped_t;
 			typedef	typename 	Avl<key_t, mapped_t>::NODE 			node_t;
-			typedef 			pair<const key_t, mapped_t>			pair_t;
+			typedef 			pair<key_t, mapped_t>				pair_t;
 
 		private:	
 			typedef 			bidirectional_iterator<const T> 	const_iterator;
-			tree_t					*current;
+			tree_t					*current_tree;
 			nood_t					*_node;
 			pair<key_t, mapped_t>	_my_pair;
-		
 		public:
-			bidirectional_iterator(tree_t *m_ptr, nood_t *node_ptr) :current(m_ptr), _node(node_ptr){
+			bidirectional_iterator(tree_t *m_ptr, nood_t *node_ptr) :current_tree(m_ptr), _node(node_ptr){
 			}
 
 			bidirectional_iterator(const bidirectional_iterator  &t){
@@ -36,7 +35,7 @@ namespace ft
 			bidirectional_iterator& operator=(bidirectional_iterator const &t){
 				if (this == &t)
 					return *this;
-				this->current = t.current;
+				this->current_tree = t.current_tree;
 				this->_node = t._node;
 				return *this;
 			}
@@ -46,17 +45,18 @@ namespace ft
 				_my_pair.second = _node->value;
 				return(_my_pair);
 			}
+			
 			pair_t *operator->(){
 				_my_pair.first = _node->key;
 				_my_pair.second = _node->value;
-				return (&_my_pair);
+				 return (&_my_pair);
 			}
 
 			bidirectional_iterator& operator++(){
 				node_t *temp = _node;
 				_node = _node->next_node(_node);
 				if (_node == NULL){
-					_node = current->the_last_node;
+					_node = current_tree->the_last_node;
 				}
 				return (*this);
 			}
@@ -68,8 +68,8 @@ namespace ft
 			}
 
 			bidirectional_iterator& operator--(){
-				if (_node == current->the_last_node){
-					_node = _node->get_the_beggist_one(current->node);
+				if (_node == current_tree->the_last_node){
+					_node = _node->get_the_beggist_one(current_tree->node);
 					return (*this);
 				}
 				else

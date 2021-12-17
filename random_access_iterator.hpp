@@ -31,9 +31,9 @@ namespace ft
 
 			random_access_iterator(){}
 			random_access_iterator& operator=(random_access_iterator const &t){
-				// if (this == &t)
-				// 	return *this;
-				// this->current = t.current;
+				if (this == &t)
+					return *this;
+				this->current = t.current;
 				return *this;
 			}
 			reference operator*(){
