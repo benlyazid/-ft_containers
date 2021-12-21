@@ -1,37 +1,38 @@
 #ifndef MAP_H
 #define MAP_H
 #include "avl.hpp"
+#include "./Vector.hpp"
 #include "bidirectional_iterator.hpp"
 
 namespace ft{
 	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > > 
 	class map{
 		public:
-			typedef				Key 																	key_type;
-			typedef				T																		mapped_type;
-			typedef				pair<const key_type, mapped_type>										value_type;
-			typedef				Compare																	key_compare;
-			typedef				Alloc																	allocator_type;
-			typedef				size_t																	size_type;
-			typedef				ptrdiff_t																difference_type;
-			typedef typename 	allocator_type::reference												reference;
-			typedef typename 	allocator_type::const_reference											const_reference;
-			typedef typename 	allocator_type::pointer													pointer;
-			typedef typename 	allocator_type::const_pointer											const_pointer;
-			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type> >				iterator;
-			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type> >			const_iterator;
+			typedef				Key 																				key_type;
+			typedef				T																					mapped_type;
+			typedef				pair<const key_type, mapped_type>													value_type;
+			typedef				Compare																				key_compare;
+			typedef				Alloc																				allocator_type;
+			typedef				size_t																				size_type;
+			typedef				ptrdiff_t																			difference_type;
+			typedef typename 	allocator_type::reference															reference;
+			typedef typename 	allocator_type::const_reference														const_reference;
+			typedef typename 	allocator_type::pointer																pointer;
+			typedef typename 	allocator_type::const_pointer														const_pointer;
+			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type>, pair< key_type, mapped_type> >				iterator;
+			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type>, const pair< key_type, mapped_type> >		const_iterator;
 			// 	typedef	**********															value_compare;
 			//	typedef ***********															reverse_iterator
 			//	typedef ***********															const_reverse_iterator
 		private:
-			typedef typename 	Avl<key_type, mapped_type>::NODE										nood_t;
+			typedef typename 	Avl<key_type, mapped_type>::NODE													nood_t;
 		public:
 		/******************************CONATRUCTORS**************************************/
 			
 			explicit map (const key_compare& comp = key_compare(), const allocator_type& alloc = allocator_type()){
 				_key_compare = comp;
 				_allocator = alloc;
-				_my_tree.node = NULL;	
+				_my_tree.node = NULL;
 				_exist = 0;
 			}
 
@@ -41,30 +42,33 @@ namespace ft{
 				_allocator = alloc;
 				_my_tree.node = NULL;
 				while(first != last){
-					_my_tree.add_node(*(first).first, *(first).second, _my_tree.node, comp);
+					_my_tree.add_node(first->first, first->second, _my_tree.node);
 					first++;
 				}
 				_exist = 0;
 			}
 			map (const map& map_x){
+				_exist = 1;
 				*this = map_x;
 			}
 			~map(){
-				this->clear();
+				// std::cout << "Destructor " << std::endl;
+				if (this->_my_tree.node)
+					this->clear();
 			}
 			map& operator= (const map& x_map){
 				if (!_exist && this == &x_map)
 					return *this ;
-				if (!_exist){
+				if (!_exist && _my_tree.avl_size){
 					this->clear();
-					std::cout<< "end of clear " << std::endl;
-
 				}
 				else
 					this->_my_tree.node = NULL;
+
 				this->_key_compare = x_map._key_compare;
 				this->_allocator = x_map._allocator;
-				this->insert(x_map.begin(), x_map.end());
+				if (x_map._my_tree.node)
+					this->insert(x_map.begin(), x_map.end());
 				//	this->_the_last_node = 
 				return *this;
 			}
@@ -72,22 +76,23 @@ namespace ft{
  			/*********************************Iterators:*******************************/
 			
 			iterator begin(){
-				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
+				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);					
 				return iterator(&_my_tree, temp);
 			}
 
 			const_iterator begin() const{
 				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
 				return const_iterator(&_my_tree, temp);
-
 			}
 
 			iterator end(){
-				return iterator(&_my_tree, _my_tree.the_last_node);
+					typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.the_last_node;
+				return iterator(&_my_tree, temp);
 			}
 
 			const_iterator end() const{
-				return const_iterator(&_my_tree, _my_tree.the_last_node);
+					typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.the_last_node;
+				return const_iterator(&_my_tree, temp);
 			}
 			
  			/*************************************Capacity:******************************/
@@ -107,12 +112,16 @@ namespace ft{
 	
 			mapped_type& operator[] (const key_type& k){
 				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
-				return node_finded->value;
+				if (node_finded)
+					return node_finded->node_pair.second;
+				pair<nood_t*, bool> pair_to_return = _my_tree.add_node(k, mapped_type(), _my_tree.node);
+				return (pair_to_return.first->node_pair.second);
 			}
 		
 			/********************************* Modifiers:**********************************/
 
 			pair<iterator,bool> insert (const value_type& val){
+				// std::cout << "START INSERT FUNCTION " << std::endl;
 				pair<nood_t*, bool> pair_to_return = _my_tree.add_node(val.first, val.second, _my_tree.node);
 				return (ft::make_pair(iterator(&_my_tree, pair_to_return.first), pair_to_return.second));
 			}
@@ -154,6 +163,8 @@ namespace ft{
 				for (size_t i = 0; i < key_to_remove.size(); i++)
 				{
 					_my_tree.remove_node(_my_tree.node, key_to_remove[i]);
+					// printing();
+					// std::cout << "**********************************************\n";
 				}
 			}
 
@@ -169,7 +180,9 @@ namespace ft{
 			/*********************************  Observers:**********************************/
 			/*********************************  Operations:**********************************/
 			/*********************************  Allocator::**********************************/
-
+			void printing(){
+				_my_tree.print_node_info(_my_tree.node);
+			}
 
 
 		private:

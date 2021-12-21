@@ -25,7 +25,6 @@ namespace ft
 			}
 			
 			operator const_iterator(){
-			 	std::cout << "JHDGFKDGH" << std::endl;
 			   	return const_iterator(this->current);
 			}
 

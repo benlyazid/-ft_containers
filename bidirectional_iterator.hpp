@@ -1,10 +1,11 @@
 #ifndef BDRCTNL__H
 #define BDRCTNL__H
+#include <type_traits>
 #include "avl.hpp"
 #include "util.h"
 namespace ft
 {
-	template <class T, class Pointer = T*, class Reference = T& >
+	template <class T, class pair_t, class Pointer = T*, class Reference = T&>
 	class bidirectional_iterator
 	{
 		public:
@@ -16,15 +17,13 @@ namespace ft
 			typedef	typename 	tree_t::key_t     					key_t;
 			typedef typename 	tree_t::mapped_t     				mapped_t;
 			typedef	typename 	Avl<key_t, mapped_t>::NODE 			node_t;
-			typedef 			pair<key_t, mapped_t>				pair_t;
 
 		private:	
-			typedef 			bidirectional_iterator<const T> 	const_iterator;
+			typedef 			bidirectional_iterator< const T, const pair_t >	const_iterator;
 			tree_t					*current_tree;
 			nood_t					*_node;
-			pair<key_t, mapped_t>	_my_pair;
 		public:
-			bidirectional_iterator(tree_t *m_ptr, nood_t *node_ptr) :current_tree(m_ptr), _node(node_ptr){
+			bidirectional_iterator(tree_t *m_ptr, nood_t* &node_ptr) :current_tree(m_ptr), _node(node_ptr){
 			}
 
 			bidirectional_iterator(const bidirectional_iterator  &t){
@@ -32,6 +31,11 @@ namespace ft
 			}
 
 			bidirectional_iterator(){}
+
+			operator const_iterator(){
+				return const_iterator(this->current_tree, this->_node);
+			}
+
 			bidirectional_iterator& operator=(bidirectional_iterator const &t){
 				if (this == &t)
 					return *this;
@@ -40,16 +44,12 @@ namespace ft
 				return *this;
 			}
 		
-			pair_t operator*(){
-				_my_pair.first = _node->key;
-				_my_pair.second = _node->value;
-				return(_my_pair);
+			pair_t& operator*() {
+				return (_node->node_pair);
 			}
 			
-			pair_t *operator->(){
-				_my_pair.first = _node->key;
-				_my_pair.second = _node->value;
-				 return (&_my_pair);
+			pair_t* operator->(){
+				 return (&(_node->node_pair));
 			}
 
 			bidirectional_iterator& operator++(){

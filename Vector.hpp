@@ -16,7 +16,7 @@
 #include "random_access_iterator.hpp"
 #include "reverse_iterator.hpp"
 #include <math.h>
-#include "utils.hpp"
+#include "./utils.hpp"
 namespace ft
 {
 	typedef  __SIZE_TYPE__  l_size;
@@ -47,7 +47,28 @@ namespace ft
 			typedef reverse_iterator<const_iterator> const_reverse_iterator;
 			typedef reverse_iterator<iterator> reverse_iterator;
 			typedef size_t size_type;
+		private :
+				template<class InputIterator>
+				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::input_iterator_tag tag){
+					while (first != last){
+						push_back(*first);
+						++first;
+					}
+				}
 
+				template<class InputIterator>
+				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::forward_iterator_tag tag){
+					this->_size = std::distance(first, last);
+					this->_capacity = this->_size;
+					this->_storage = this->alloc.allocate(_size);
+					int i = 0;
+					while (first != last)
+					{
+						this->alloc.construct(_storage + i, *first);
+						first++;
+					}			
+				}
+		public:
 			explicit Vector(const Allocator& alloc = Allocator()){
 
 				this->alloc = alloc;
@@ -70,19 +91,16 @@ namespace ft
 				_storage = NULL;
 				*this = v;
 			}
+
 			template <class InputIterator>
 			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
-				this->_size = abs(last - first);
-				this->_capacity = this->_size;
+				_size = 0;
+				_capacity = 0;
 				this->alloc = alloc;
-				this->_storage = this->alloc.allocate(_size);
-				int i = 0;
-				while (first != last)
-				{
-					this->alloc.construct(_storage + i, *first);
-					first++;
-					i++;
-				}
+				typename ft::iterator_traits<InputIterator>::iterator_category test;
+
+				iterator_construct_by_type(first, last, test);
+
 			}
 			Vector& operator=(const Vector& v){
 				if (this != &v)
@@ -321,7 +339,8 @@ namespace ft
 					 alloc.construct(new_storage + i, _storage[i]);
 					 alloc.destroy(_storage + i);
 				}
-				alloc.deallocate(_storage, _capacity);
+				if (_size)
+					alloc.deallocate(_storage, _capacity);
 				alloc.construct(new_storage + _size, val);
 				_capacity = new_capacity;
 				++_size;
