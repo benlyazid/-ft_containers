@@ -1,6 +1,7 @@
 #ifndef __ITER__
 #define __ITER__
 
+
 namespace ft
 {
 	template <class Category, class T, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T& >
@@ -14,7 +15,7 @@ namespace ft
 			typedef Pointer pointer ;
 			typedef Reference reference ;
 			typedef Distance difference_type ;
-		protected:
+		protected: // private
 			pointer current;
 		public:
 			random_access_iterator(T *m_ptr) :current(m_ptr){
@@ -24,8 +25,8 @@ namespace ft
 				*this = t;
 			}
 			
-			operator const_iterator(){
-			   	return const_iterator(this->current);
+			operator const_iterator() const{
+			   	return  const_iterator(this->current);
 			}
 
 			random_access_iterator(){}

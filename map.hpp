@@ -8,22 +8,22 @@ namespace ft{
 	template < class Key, class T, class Compare = std::less<Key>, class Alloc = std::allocator<pair<const Key,T> > > 
 	class map{
 		public:
-			typedef				Key 																				key_type;
-			typedef				T																					mapped_type;
-			typedef				pair<const key_type, mapped_type>													value_type;
-			typedef				Compare																				key_compare;
-			typedef				Alloc																				allocator_type;
-			typedef				size_t																				size_type;
-			typedef				ptrdiff_t																			difference_type;
-			typedef typename 	allocator_type::reference															reference;
-			typedef typename 	allocator_type::const_reference														const_reference;
-			typedef typename 	allocator_type::pointer																pointer;
-			typedef typename 	allocator_type::const_pointer														const_pointer;
+			typedef				Key 																								key_type;
+			typedef				T																									mapped_type;
+			typedef				pair<const key_type, mapped_type>																	value_type;
+			typedef				Compare																								key_compare;
+			typedef				Alloc																								allocator_type;
+			typedef				size_t																								size_type;
+			typedef				ptrdiff_t																							difference_type;
+			typedef typename 	allocator_type::reference																			reference;
+			typedef typename 	allocator_type::const_reference																		const_reference;
+			typedef typename 	allocator_type::pointer																				pointer;
+			typedef typename 	allocator_type::const_pointer																		const_pointer;
 			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type>, pair< key_type, mapped_type> >				iterator;
-			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type>, const pair< key_type, mapped_type> >		const_iterator;
+			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type>, const pair< key_type, mapped_type> >	const_iterator;
+			typedef 			ft::reverse_iterator<iterator>																		reverse_iterator;
+			typedef 			ft::reverse_iterator<const iterator>																const_reverse_iterator;
 			// 	typedef	**********															value_compare;
-			//	typedef ***********															reverse_iterator
-			//	typedef ***********															const_reverse_iterator
 		private:
 			typedef typename 	Avl<key_type, mapped_type>::NODE													nood_t;
 		public:
@@ -69,19 +69,26 @@ namespace ft{
 				this->_allocator = x_map._allocator;
 				if (x_map._my_tree.node)
 					this->insert(x_map.begin(), x_map.end());
-				//	this->_the_last_node = 
 				return *this;
 			}
 
  			/*********************************Iterators:*******************************/
 			
 			iterator begin(){
-				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);					
+				typename ft::Avl<key_type, mapped_type>::NODE *temp;
+				if (_my_tree.avl_size == 0)
+					temp = _my_tree.the_last_node;
+				else
+					temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
 				return iterator(&_my_tree, temp);
 			}
 
 			const_iterator begin() const{
-				typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
+				typename ft::Avl<key_type, mapped_type>::NODE *temp;
+				if (_my_tree.avl_size == 0)
+					temp = _my_tree.the_last_node;
+				else
+					temp = _my_tree.node->get_the_smallest_one(_my_tree.node);
 				return const_iterator(&_my_tree, temp);
 			}
 
@@ -94,7 +101,21 @@ namespace ft{
 					typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.the_last_node;
 				return const_iterator(&_my_tree, temp);
 			}
-			
+
+			reverse_iterator rbegin(){
+				return reverse_iterator(this->end());
+			}
+
+			const_reverse_iterator rbegin() const{
+				return reverse_iterator(this->end());
+			}
+			reverse_iterator rend(){
+				return reverse_iterator(this->begin());
+
+			}
+			const_reverse_iterator rend() const{
+				return reverse_iterator(this->begin());
+			}
  			/*************************************Capacity:******************************/
 			 
 			bool empty() const{
@@ -121,7 +142,6 @@ namespace ft{
 			/********************************* Modifiers:**********************************/
 
 			pair<iterator,bool> insert (const value_type& val){
-				// std::cout << "START INSERT FUNCTION " << std::endl;
 				pair<nood_t*, bool> pair_to_return = _my_tree.add_node(val.first, val.second, _my_tree.node);
 				return (ft::make_pair(iterator(&_my_tree, pair_to_return.first), pair_to_return.second));
 			}
@@ -163,8 +183,6 @@ namespace ft{
 				for (size_t i = 0; i < key_to_remove.size(); i++)
 				{
 					_my_tree.remove_node(_my_tree.node, key_to_remove[i]);
-					// printing();
-					// std::cout << "**********************************************\n";
 				}
 			}
 
@@ -193,5 +211,4 @@ namespace ft{
 	};
 
 };
-
 #endif

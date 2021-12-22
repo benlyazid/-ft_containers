@@ -49,7 +49,7 @@ namespace ft
 			typedef size_t size_type;
 		private :
 				template<class InputIterator>
-				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::input_iterator_tag tag){
+				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::input_iterator_tag){
 					while (first != last){
 						push_back(*first);
 						++first;
@@ -57,7 +57,7 @@ namespace ft
 				}
 
 				template<class InputIterator>
-				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::forward_iterator_tag tag){
+				void	iterator_construct_by_type(InputIterator first, InputIterator last, std::forward_iterator_tag){
 					this->_size = std::distance(first, last);
 					this->_capacity = this->_size;
 					this->_storage = this->alloc.allocate(_size);
@@ -66,6 +66,7 @@ namespace ft
 					{
 						this->alloc.construct(_storage + i, *first);
 						first++;
+						i++;
 					}			
 				}
 		public:
@@ -76,6 +77,7 @@ namespace ft
 				this->_capacity = 0;
 				this->_storage = NULL;
 			}
+		
 			explicit Vector(l_size n, const T& val = T(), const Allocator& alloc = Allocator()){
 				this->_size = n;
 				this->alloc = alloc;
@@ -91,16 +93,14 @@ namespace ft
 				_storage = NULL;
 				*this = v;
 			}
-
 			template <class InputIterator>
 			Vector(InputIterator first, InputIterator last, const Allocator& alloc = Allocator(), typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
 				_size = 0;
 				_capacity = 0;
 				this->alloc = alloc;
 				typename ft::iterator_traits<InputIterator>::iterator_category test;
-
+				this->alloc = alloc;
 				iterator_construct_by_type(first, last, test);
-
 			}
 			Vector& operator=(const Vector& v){
 				if (this != &v)
@@ -124,6 +124,7 @@ namespace ft
 				}
 				return *this;
 			}
+			
 			~Vector(){
 				for (size_t i = 0; i < _size; i++)
 				{
@@ -132,6 +133,7 @@ namespace ft
 				if (_capacity)
 					alloc.deallocate(_storage, _capacity);
 			}
+			
 			reference operator[](l_size n)
 			{
 				return (this->_storage[n]);
@@ -590,3 +592,4 @@ namespace ft
 
 };
 #endif
+ 

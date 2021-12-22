@@ -7,7 +7,9 @@ namespace ft
 	class reverse_iterator
 	{
 		private:
-			typedef reverse_iterator <random_access_iterator <typename Iterator_::iterator_category, const typename Iterator_::value_type> > const_reverse_iterator;
+			// typedef reverse_iterator <random_access_iterator <typename Iterator_::iterator_category, const typename Iterator_::value_type> > const_reverse_iterator;
+
+			// typedef reverse_iterator <const  Iterator_ > const_reverse_iterator;
 		public:
 			typedef 			Iterator_ iterator_type;
 			typedef typename	Iterator_::iterator_category iterator_category;
@@ -20,37 +22,32 @@ namespace ft
 		public:
 			reverse_iterator() : current(NULL){
 			}
-			explicit reverse_iterator (iterator_type it) : current(it){
-				std::cout << "check done" << std::endl;
+			reverse_iterator (iterator_type it) : current(it){
 			}
 
-			// template <class Iter>
-			explicit reverse_iterator (const reverse_iterator& rev_it){
+			reverse_iterator (const reverse_iterator& rev_it){
 				this->current = rev_it.base();
-				std::cout << "$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-				std::cout << typeid(this->current).name() << std::endl;
-				std::cout << "$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
-				std::cout << typeid(rev_it.base()).name() << std::endl;
-				std::cout << "$$$$$$$$$$$$$$$$$$$$$$$" << std::endl;
 			}
 			
-			reverse_iterator& operator=(reverse_iterator const &r_it){
-				std::cout << "-------------------" << std::endl;
-				std::cout << typeid(reverse_iterator::iterator_type).name() << std::endl;
-				std::cout << "-------------------" << std::endl;
-				
-				if (this == &r_it)
-					return (*this);
-				//this->current = r_it.current;
+			template <class iter_t>
+			reverse_iterator& operator=(iter_t const &r_it){
+				// if (this == &r_it)
+				// 	return (*this);
+				// this->current = r_it.current;
+				this->current = r_it.base();
 				return (*this);
 			}
 
 			reference operator*(){
-				return *(current - 1);
+				iterator_type tmp = current;
+				--tmp;
+				return *tmp;
+
 			}
-			operator const_reverse_iterator() {
-				return const_reverse_iterator(this->current);
-			}
+			// operator const_reverse_iterator() {
+			// 	return const_reverse_iterator(this->current);
+			// }
+
 			iterator_type base() const{
 				return  current;
 			}
@@ -79,11 +76,7 @@ namespace ft
 				++current;
 				return *this;
 			}
-			// operator const_reverse_iterator(){
-			// 	std::cout << "DKGKDJG" << std::endl;
-			//    	return const_reverse_iterator(this->current);
-			// }
-
+			
 			reverse_iterator operator++(int){
 				reverse_iterator tmp(*this);
 				--current;

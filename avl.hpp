@@ -28,16 +28,16 @@ namespace ft{
 					// this->key = key;
 					// this->value = value;
 
-					std::cout << "INSERT 0 " << std::endl;
+					// std::cout << "INSERT 0 " << std::endl;
 					node_pair.first = key;
-					std::cout << "INSERT 0_0 " << "|" << key << "|" << std::endl;
+					// std::cout << "INSERT 0_0 " << "|" << key << "|" << std::endl;
 					node_pair.second = value;
-					std::cout << "INSERT 0_1 " << std::endl;
+					// std::cout << "INSERT 0_1 " << std::endl;
 					this->left = NULL;
-					std::cout << "INSERT 1 " << std::endl;
+					// std::cout << "INSERT 1 " << std::endl;
 					this->parent = parent;
 					this->right = NULL;
-					std::cout << "INSERT 2 " << std::endl;
+					// std::cout << "INSERT 2 " << std::endl;
 					this->right_h = 0;
 					this->left_h = 0;
 				}
@@ -186,7 +186,7 @@ namespace ft{
 				// std::cout << "ADDING NODE IN RIGHT" << std::endl;
 				avl_size++;
 				head->right = node_allocator.allocate(1);
-				// node_allocator.construct(head->right);
+				node_allocator.construct(head->right);
 				head->right_h++;
 				// head->right->insert(new_key, new_value, head);
 				/*********/
@@ -210,6 +210,7 @@ namespace ft{
 			void	add_node_in_left(NODE* &head, const KEY new_key, const T new_value){
 				avl_size++;
 				head->left = node_allocator.allocate(1);
+				node_allocator.construct(head->left);
 				head->left_h++;
 
 				/*********/
@@ -228,6 +229,7 @@ namespace ft{
 				avl_size++;
 				// std::cout << "add node value " << new_key << std::endl;
 				head = node_allocator.allocate(1);
+				node_allocator.construct(head);
 				head->left_h = 0;
 				head->right_h = 0;
 				// std::cout << "add node value__0 " << new_key << std::endl;

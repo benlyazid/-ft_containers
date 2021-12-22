@@ -11,18 +11,22 @@ namespace ft
 		public:
 			typedef	typename	std::bidirectional_iterator_tag		iterator_category;
 			typedef 			T 									tree_t;
-			typedef typename 	tree_t::node_t 						nood_t;
-			typedef 			Pointer								pointer ;
-			typedef				Reference							reference ;
 			typedef	typename 	tree_t::key_t     					key_t;
 			typedef typename 	tree_t::mapped_t     				mapped_t;
+			typedef typename 	tree_t::node_t 						nood_t;
+			typedef	typename 	Avl<key_t, mapped_t>::NODE 	value_type;
+			typedef 			pair_t*								pointer ;
+			typedef				pair_t&								reference ;
 			typedef	typename 	Avl<key_t, mapped_t>::NODE 			node_t;
+			typedef				ptrdiff_t							difference_type;
 
 		private:	
 			typedef 			bidirectional_iterator< const T, const pair_t >	const_iterator;
 			tree_t					*current_tree;
 			nood_t					*_node;
 		public:
+			bidirectional_iterator(tree_t *m_ptr) : current_tree(m_ptr){
+			}
 			bidirectional_iterator(tree_t *m_ptr, nood_t* &node_ptr) :current_tree(m_ptr), _node(node_ptr){
 			}
 
