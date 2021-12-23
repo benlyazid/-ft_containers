@@ -22,7 +22,7 @@ namespace ft
 		public:
 			reverse_iterator() : current(NULL){
 			}
-			reverse_iterator (iterator_type it) : current(it){
+			reverse_iterator (iterator_type  it) : current(it){
 			}
 
 			reverse_iterator (const reverse_iterator& rev_it){
@@ -31,9 +31,6 @@ namespace ft
 			
 			template <class iter_t>
 			reverse_iterator& operator=(iter_t const &r_it){
-				// if (this == &r_it)
-				// 	return (*this);
-				// this->current = r_it.current;
 				this->current = r_it.base();
 				return (*this);
 			}
@@ -44,8 +41,8 @@ namespace ft
 				return *tmp;
 
 			}
-			// operator const_reverse_iterator() {
-			// 	return const_reverse_iterator(this->current);
+			// operator reverse_iterator<const iterator_type>() {
+			// 	return reverse_iterator<const iterator_type>(this->current);
 			// }
 
 			iterator_type base() const{

@@ -22,7 +22,7 @@ namespace ft{
 			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type>, pair< key_type, mapped_type> >				iterator;
 			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type>, const pair< key_type, mapped_type> >	const_iterator;
 			typedef 			ft::reverse_iterator<iterator>																		reverse_iterator;
-			typedef 			ft::reverse_iterator<const iterator>																const_reverse_iterator;
+			typedef 			ft::reverse_iterator<const_iterator>																const_reverse_iterator;
 			// 	typedef	**********															value_compare;
 		private:
 			typedef typename 	Avl<key_type, mapped_type>::NODE													nood_t;
@@ -106,15 +106,16 @@ namespace ft{
 				return reverse_iterator(this->end());
 			}
 
-			const_reverse_iterator rbegin() const{
-				return reverse_iterator(this->end());
+			const_reverse_iterator rbegin() const {
+
+				return const_reverse_iterator(this->end());		
 			}
 			reverse_iterator rend(){
 				return reverse_iterator(this->begin());
 
 			}
 			const_reverse_iterator rend() const{
-				return reverse_iterator(this->begin());
+				return const_reverse_iterator(this->begin());
 			}
  			/*************************************Capacity:******************************/
 			 
@@ -149,7 +150,7 @@ namespace ft{
 			iterator insert (iterator position, const value_type& val){
 				(void)(position);
 				pair<nood_t*, bool> pair_to_return = _my_tree.add_node(val.first, val.second, _my_tree.node);
-				iterator(&_my_tree, pair_to_return.first);
+				return iterator(&_my_tree, pair_to_return.first);
 			}
 
 			template <class InputIterator>
@@ -190,6 +191,7 @@ namespace ft{
 				std::swap(x_map._my_tree, this->_my_tree);
 				std::swap(x_map._key_compare, this->_key_compare);
 				std::swap(x_map._allocator, this->_allocator);
+				std::swap(x_map._exist, this->_exist);
 			}
 
 			void clear(){
@@ -197,6 +199,17 @@ namespace ft{
 			}
 			/*********************************  Observers:**********************************/
 			/*********************************  Operations:**********************************/
+
+			//corect the return that should be the last node if we didnt find nothing
+			iterator find (const key_type& k){
+				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+				return(iterator(&_my_tree, node_finded));
+			}
+			const_iterator find (const key_type& k) const{
+				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+				return(const_iterator(&_my_tree, node_finded));
+
+			}
 			/*********************************  Allocator::**********************************/
 			void printing(){
 				_my_tree.print_node_info(_my_tree.node);
@@ -204,10 +217,10 @@ namespace ft{
 
 
 		private:
-			Avl<key_type, mapped_type> _my_tree;
 			key_compare		_key_compare;
 			allocator_type	_allocator;
 			bool			_exist;
+			Avl<key_type, mapped_type> _my_tree;
 	};
 
 };

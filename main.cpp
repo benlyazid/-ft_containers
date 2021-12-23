@@ -45,45 +45,32 @@ int main()
 	// 	#define MAP std::map 
 	// #endif
 
-	// std::map<char,int> mymap;
+        std::map<std::string, std::string, std::greater<std::string> > m1, m2;
+        ft::map<std::string, std::string, std::greater<std::string> > ft_m1, ft_m2;
 
-	// mymap['x'] = 100;
-	// mymap['y'] = 200;
-	// mymap['z'] = 300;
+        m1["γ"] = "gamma";
+        m1["β"] = "beta";
+        m1["α"] = "alpha";
+        m1["γ"] = "gamma";
 
-	// show content:
-	// std::map<char,int>::reverse_iterator rit;
-	// rit = mymap.rbegin();
+      
 
-	// std::cout <<  rit->first << std::endl;
+        ft_m1["γ"] = "gamma";
+        ft_m1["β"] = "beta";
+        ft_m1["α"] = "alpha";
+        ft_m1["γ"] = "gamma";
 
-
-
-
-	// rit_ = mymap_2.rbegin();
-	// std::cout <<  rit_->first << std::endl;
-	// for (rit=mymap.rbegin(); rit!=mymap.rend(); ++rit)
-	// 	std::cout << rit->first << " => " << rit->second << '\n';
-
-
-	// // show content:
-	// ft::map<char,int>::reverse_iterator rit_2;
-	// for (rit_2=mymap_2.rbegin(); rit_2!=mymap_2.rend(); ++rit_2)
-	// 	std::cout << rit_2->first << " => " << rit_2->second << '\n';
-
-
-
-	ft::Vector<int> my_v(10);
-	ft::Vector<int>::reverse_iterator r_it;
-	ft::Vector<int>::const_reverse_iterator c_r_it;
-	c_r_it = r_it;
-
+        //const std::map<std::string, std::string, std::greater<std::string> >::iterator iter = std::next(m1.begin());
+        //onst ft::map<std::string, std::string, std::greater<std::string> >::iterator ft_iter = std::next(ft_m1.begin());
+// THE PROBLEM IS IN INSERT WITH SPESCPHEC SORT FUNCTION
+  
+        // cond = cond && ref.first == ft_ref.first && ref.second == ft_ref.second && iter->second == ft_iter->second && iter->first == ft_iter->first && m1.size() == ft_m1.size() && m2.size() && ft_m2.size();
+        std::cout << "\n" << m1.begin()->first << "    "   << ft_m1.begin()->first;
+        cond = ref.first == ft_ref.first;
+        
+    
 	return 0;
 };
-
-
-
-
 
 
 

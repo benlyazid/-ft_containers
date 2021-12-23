@@ -1,6 +1,8 @@
 #ifndef AVL_H
 #define AVL_H
 #include "./utils.hpp"
+#include <algorithm>
+#include <iostream>
 namespace ft{
 
 	template <class KEY, class T, class Compare = std::less<KEY>, class Allocator = std::allocator<std::pair<const KEY, T> > >
@@ -21,7 +23,6 @@ namespace ft{
 				NODE 	*parent;
 				int		left_h;
 				int		right_h;
-				int		diff;
 				Compare 	compare;
 
 				void insert(KEY key, T value, NODE* parent){
@@ -43,14 +44,23 @@ namespace ft{
 				}
 				
 				NODE(const NODE* &origen){
-					// key = origen->key;
-					// value = origen->value;
 					node_pair = origen->node_pair;
 					left = origen->left;
 					parent = origen->parent;
 					right = origen->right;
 					right_h = origen->right_h;
 					left_h = origen->left_h;
+					compare = origen->compare;
+				}
+
+				NODE& operator=(const NODE& x_node){
+					node_pair = x_node->node_pair;
+					left = x_node->left;
+					parent = x_node->parent;
+					right = x_node->right;
+					right_h = x_node->right_h;
+					left_h = x_node->left_h;
+					compare = x_node->compare;
 				}
 	
 				NODE *next_node(NODE *head){
@@ -163,10 +173,22 @@ namespace ft{
 			NODE *node;
 			NODE *the_last_node;
 			size_t avl_size;
-			// ft::pair<int, int> *__pair;
-			ft::pair<const key_t, mapped_t> _pair_for_iterator;
 
-			public:
+		public:
+			// Avl(const Avl & avl_x){
+			// 	this->node = avl_x.node;
+			// 	the_last_node = avl_x.the_last_node;
+			// 	avl_size = avl_x.avl_size;
+			// }
+
+			Avl& operator =(const Avl& avl_x){
+				this->node = avl_x.node;
+				the_last_node = avl_x.the_last_node;
+				avl_size = avl_x.avl_size;
+				node_allocator = avl_x.node_allocator;
+				return *this;
+			}
+
 			Avl(){
 				avl_size = 0;
 				the_last_node = node_allocator.allocate(1);
