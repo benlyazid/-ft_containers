@@ -5,11 +5,12 @@
 #include <iostream>
 namespace ft{
 
-	template <class KEY, class T, class Compare = std::less<KEY>, class Allocator = std::allocator<std::pair<const KEY, T> > >
+	template <class KEY, class T, class CMPR, class Allocator = std::allocator<std::pair<const KEY, T> > >
     class Avl{
 		public:
 			typedef KEY key_t;
 			typedef T 	mapped_t;
+			typedef	CMPR Compare;
 			Compare 	compare;
 
 			struct NODE
@@ -64,6 +65,7 @@ namespace ft{
 				}
 	
 				NODE *next_node(NODE *head){
+					std::cout << "check " << std::endl;
 					NODE *temp = head;
 					if(head && head->right == NULL){
 						if (head->parent){
@@ -92,20 +94,7 @@ namespace ft{
 					return NULL;
 				}
 
-				// NODE *find_node(NODE *head, KEY key_to_find){
-				// 	NODE *ret = NULL;
-				// 	if (head->key == key_to_find )
-				// 		return head;
-				// 	if (head->right)
-				// 		ret = find_node(head->right, key_to_find);
-				// 	if (ret && ret->key == key_to_find)
-				// 		return (ret);
-				// 	if (head->left)
-				// 		ret = find_node(head->left, key_to_find);
-				// 	if (ret && ret->key == key_to_find)
-				// 		return (ret);
-				// 	return NULL;					
-				// }
+
 	
 				NODE *find_node(NODE *head, KEY key_to_find){
 					NODE *ret = NULL;
@@ -149,7 +138,7 @@ namespace ft{
 					return NULL;
 				}
 				
-				NODE *get_the_smallest_one(NODE *head){
+				NODE *get_the_smallest_one(NODE *head) const {
 					NODE *temp = head;
 					while(temp && temp->left)
 						temp = temp->left;
@@ -463,6 +452,17 @@ namespace ft{
 				check_balance(node);
 			}
 			
+			NODE* lower_bound (NODE *first, KEY key) const{
+				while (first){
+						std::cout << first->node_pair.first << std::endl;
+					// if (compare(first->node_pair.first, key))
+						first = first->next_node(first);
+					// else
+						// break ;
+				}
+				return first;
+			}
+
 			static void print_node_info(NODE *head){
 				if (!head){
 					std::cout << "THIS NODE IS NULL " << std::endl;

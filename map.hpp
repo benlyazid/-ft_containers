@@ -19,13 +19,13 @@ namespace ft{
 			typedef typename 	allocator_type::const_reference																		const_reference;
 			typedef typename 	allocator_type::pointer																				pointer;
 			typedef typename 	allocator_type::const_pointer																		const_pointer;
-			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type>, pair< key_type, mapped_type> >				iterator;
-			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type>, const pair< key_type, mapped_type> >	const_iterator;
+			typedef 			bidirectional_iterator< ft::Avl<key_type, mapped_type, key_compare>, pair< key_type, mapped_type> >				iterator;
+			typedef 			bidirectional_iterator< const ft::Avl<key_type, mapped_type, key_compare>, const pair< key_type, mapped_type> >	const_iterator;
 			typedef 			ft::reverse_iterator<iterator>																		reverse_iterator;
 			typedef 			ft::reverse_iterator<const_iterator>																const_reverse_iterator;
 			// 	typedef	**********															value_compare;
 		private:
-			typedef typename 	Avl<key_type, mapped_type>::NODE													nood_t;
+			typedef typename 	Avl<key_type, mapped_type, key_compare>::NODE													nood_t;
 		public:
 		/******************************CONATRUCTORS**************************************/
 			
@@ -75,7 +75,7 @@ namespace ft{
  			/*********************************Iterators:*******************************/
 			
 			iterator begin(){
-				typename ft::Avl<key_type, mapped_type>::NODE *temp;
+				typename ft::Avl<key_type, mapped_type, key_compare>::NODE *temp;
 				if (_my_tree.avl_size == 0)
 					temp = _my_tree.the_last_node;
 				else
@@ -84,7 +84,7 @@ namespace ft{
 			}
 
 			const_iterator begin() const{
-				typename ft::Avl<key_type, mapped_type>::NODE *temp;
+				typename ft::Avl<key_type, mapped_type, key_compare>::NODE *temp;
 				if (_my_tree.avl_size == 0)
 					temp = _my_tree.the_last_node;
 				else
@@ -93,12 +93,12 @@ namespace ft{
 			}
 
 			iterator end(){
-					typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.the_last_node;
+					typename ft::Avl<key_type, mapped_type, key_compare>::NODE *temp = _my_tree.the_last_node;
 				return iterator(&_my_tree, temp);
 			}
 
 			const_iterator end() const{
-					typename ft::Avl<key_type, mapped_type>::NODE *temp = _my_tree.the_last_node;
+					typename ft::Avl<key_type, mapped_type, key_compare>::NODE *temp = _my_tree.the_last_node;
 				return const_iterator(&_my_tree, temp);
 			}
 
@@ -199,16 +199,43 @@ namespace ft{
 			}
 			/*********************************  Observers:**********************************/
 			/*********************************  Operations:**********************************/
+			iterator lower_bound (const key_type& k){
+				nood_t *temp =  _my_tree.lower_bound(_my_tree.node->get_the_smallest_one(_my_tree.node), k);
+				if (!temp)
+					return (end());
+				return iterator(&_my_tree, temp);
+			}
+
+			const_iterator lower_bound (const key_type& k) const{
+				// nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+
+				nood_t 	*node_finded =  _my_tree.lower_bound(_my_tree.node->get_the_smallest_one(_my_tree.node), k);
+				if (!node_finded)
+					return (this->end());
+				//you should correct this function
+				return const_iterator(&_my_tree, node_finded);
+			}
 
 			//corect the return that should be the last node if we didnt find nothing
 			iterator find (const key_type& k){
 				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+				if (node_finded == NULL)
+					node_finded = _my_tree.the_last_node;
 				return(iterator(&_my_tree, node_finded));
 			}
+
 			const_iterator find (const key_type& k) const{
 				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+				if (node_finded == NULL)
+					node_finded = _my_tree.the_last_node;
 				return(const_iterator(&_my_tree, node_finded));
+			}
 
+			size_type count (const key_type& k) const{
+				nood_t	*node_finded = _my_tree.node->find_node(_my_tree.node, k);
+				if (!node_finded)
+					return (0);
+				return (1);
 			}
 			/*********************************  Allocator::**********************************/
 			void printing(){
@@ -220,7 +247,7 @@ namespace ft{
 			key_compare		_key_compare;
 			allocator_type	_allocator;
 			bool			_exist;
-			Avl<key_type, mapped_type> _my_tree;
+			Avl<key_type, mapped_type, key_compare> _my_tree;
 	};
 
 };

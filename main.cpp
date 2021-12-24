@@ -32,11 +32,6 @@ using namespace ft;
 typedef std::string key_type_t;
 
 
-template<typename T> // primary template
-struct isFF_void : std::false_type {};
-template<>           // explicit specialization for T = void
-struct isFF_void<void> : std::true_type {};
-
 int main()
 {
 	// #if MY
@@ -45,29 +40,32 @@ int main()
 	// 	#define MAP std::map 
 	// #endif
 
-        std::map<std::string, std::string, std::greater<std::string> > m1, m2;
-        ft::map<std::string, std::string, std::greater<std::string> > ft_m1, ft_m2;
+	// std::map<int, std::string> m;
+	ft::map<int, std::string> ft_m;
+	int arr[] = {20, 10, 100, 15, 60, 90, 65, 200, 150}; // size = 9
+	for (size_t i = 0; i < 9; ++i)
+	{
+		ft_m.insert(ft::make_pair(arr[i], "value"));
+	}
+	// std::map<int, std::string> const c_m(m.begin(), m.end());
+	// ft::map<int, std::string> const c_ft_m(ft_m.begin(), ft_m.end());
 
-        m1["γ"] = "gamma";
-        m1["β"] = "beta";
-        m1["α"] = "alpha";
-        m1["γ"] = "gamma";
-
+	// bool cond = (cond && (m.lower_bound(15)->first == ft_m.lower_bound(15)->first));
+	// cond = (cond && (m.lower_bound(65)->first == ft_m.lower_bound(65)->first));
+	// std::cout << ft_m.lower_bound(90)->first << std::endl;
       
+	// ft_m.printing();
 
-        ft_m1["γ"] = "gamma";
-        ft_m1["β"] = "beta";
-        ft_m1["α"] = "alpha";
-        ft_m1["γ"] = "gamma";
-
-        //const std::map<std::string, std::string, std::greater<std::string> >::iterator iter = std::next(m1.begin());
-        //onst ft::map<std::string, std::string, std::greater<std::string> >::iterator ft_iter = std::next(ft_m1.begin());
-// THE PROBLEM IS IN INSERT WITH SPESCPHEC SORT FUNCTION
-  
-        // cond = cond && ref.first == ft_ref.first && ref.second == ft_ref.second && iter->second == ft_iter->second && iter->first == ft_iter->first && m1.size() == ft_m1.size() && m2.size() && ft_m2.size();
-        std::cout << "\n" << m1.begin()->first << "    "   << ft_m1.begin()->first;
-        cond = ref.first == ft_ref.first;
-        
+	ft::map<int, std::string>::iterator it_1, it_2;
+	it_1 = ft_m.begin();
+	it_2 = ft_m.end();
+	while (it_1 != it_2)
+	{
+		std::cout << it_1->first << std::endl;
+		it_1++;
+		std::cout << "**********************\n";
+	}
+	
     
 	return 0;
 };

@@ -14,10 +14,10 @@ namespace ft
 			typedef	typename 	tree_t::key_t     					key_t;
 			typedef typename 	tree_t::mapped_t     				mapped_t;
 			typedef typename 	tree_t::node_t 						nood_t;
-			typedef	typename 	Avl<key_t, mapped_t>::NODE 	value_type;
+			typedef	typename 	Avl<key_t, mapped_t, typename tree_t::Compare>::NODE 	value_type;
 			typedef 			pair_t*								pointer ;
 			typedef				pair_t&								reference ;
-			typedef	typename 	Avl<key_t, mapped_t>::NODE 			node_t;
+			typedef	typename 	Avl<key_t, mapped_t, typename tree_t::Compare>::NODE 			node_t;
 			typedef				ptrdiff_t							difference_type;
 
 		private:	
