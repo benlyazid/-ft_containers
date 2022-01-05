@@ -18,7 +18,8 @@ namespace ft{
 				NODE() : node_pair() {}
 				// KEY  	key;
 				// T		value;
-				ft::pair<key_t, mapped_t> node_pair;
+				ft::pair<const key_t, mapped_t> node_pair;
+				// ft::pair<key_t, mapped_t> node_pair;
 				NODE	*left;
 				NODE 	*right;
 				NODE 	*parent;
@@ -44,28 +45,30 @@ namespace ft{
 					this->left_h = 0;
 				}
 				
-				NODE(const NODE* &origen){
-					node_pair = origen->node_pair;
-					left = origen->left;
-					parent = origen->parent;
-					right = origen->right;
-					right_h = origen->right_h;
-					left_h = origen->left_h;
-					compare = origen->compare;
-				}
+				// NODE(const NODE* &origen){
+				// 	std::cout << "check copy " << std::endl;
+				// 	node_pair = origen->node_pair;
+				// 	left = origen->left;
+				// 	parent = origen->parent;
+				// 	right = origen->right;
+				// 	right_h = origen->right_h;
+				// 	left_h = origen->left_h;
+				// 	compare = origen->compare;
+				// }
 
-				NODE& operator=(const NODE& x_node){
-					node_pair = x_node->node_pair;
-					left = x_node->left;
-					parent = x_node->parent;
-					right = x_node->right;
-					right_h = x_node->right_h;
-					left_h = x_node->left_h;
-					compare = x_node->compare;
-				}
+				// NODE& operator=(const NODE& x_node){
+				// 	node_pair = x_node.node_pair;
+				// 	left = x_node.left;
+				// 	parent = x_node.parent;
+				// 	right = x_node.right;
+				// 	right_h = x_node.right_h;
+				// 	left_h = x_node.left_h;
+				// 	compare = x_node.compare;
+				// 	return *this;
+				// }
 	
 				NODE *next_node(NODE *head){
-					std::cout << "check " << std::endl;
+					// std::cout << "check head key"  << head->node_pair.first << std::endl;
 					NODE *temp = head;
 					if(head && head->right == NULL){
 						if (head->parent){
@@ -97,7 +100,6 @@ namespace ft{
 
 	
 				NODE *find_node(NODE *head, KEY key_to_find){
-					NODE *ret = NULL;
 					if(!head)
 						return (NULL);
 					if (!this->compare(head->node_pair.first, key_to_find) && !this->compare(key_to_find, head->node_pair.first))
@@ -164,23 +166,26 @@ namespace ft{
 			size_t avl_size;
 
 		public:
-			// Avl(const Avl & avl_x){
-			// 	this->node = avl_x.node;
-			// 	the_last_node = avl_x.the_last_node;
-			// 	avl_size = avl_x.avl_size;
-			// }
 
-			Avl& operator =(const Avl& avl_x){
-				this->node = avl_x.node;
-				the_last_node = avl_x.the_last_node;
-				avl_size = avl_x.avl_size;
-				node_allocator = avl_x.node_allocator;
-				return *this;
-			}
+
+			// Avl& operator =(const Avl& avl_x){ // you should free here
+			// 	if (this == &avl_x)
+			// 		return *this;
+			// 	this->node = node_allocator.allocate(1);
+			// 	*(this->node) = *(avl_x.node);
+			// 	this->the_last_node = node_allocator.allocate(1);
+			// 	// *the_last_node = *(avl_x.the_last_node);
+			// 	avl_size = avl_x.avl_size;
+			// 	node_allocator = avl_x.node_allocator;
+			// 	return *this;
+			// }
 
 			Avl(){
 				avl_size = 0;
 				the_last_node = node_allocator.allocate(1);
+			}
+			~Avl(){
+				node_allocator.deallocate(the_last_node, 1);
 			}
 
 			int max_hight(NODE *node){
@@ -228,7 +233,7 @@ namespace ft{
 				head->left->node_pair.first = new_key;
 				head->left->node_pair.second = new_value;
 				head->left->left = NULL;
-				head->left->parent = NULL;
+				head->left->parent = head;
 				head->left->right = NULL;
 				head->left->right_h = 0;
 				head->left->left_h = 0;
@@ -379,19 +384,8 @@ namespace ft{
 				while (temp_head->right){
 					temp_head = temp_head->right;
 				}
-				//temp_head->node_pair = head->node_pair;
+	
 				std::swap(temp_head->node_pair, head->node_pair);
-				// head = temp_head;
-				// head->left = temp_head->left;
-				// head->right = temp_head->right;
-
-
-				// temp_successor_key = head->node_pair.first;
-				// std::cout << " swap with " << temp_successor_key << std::endl;
-				// //head->node_pair.first = temp_head->node_pair.first;
-				// temp_head->node_pair.first = temp_successor_key;
-				// head = temp_head;
-				// std::cout << "check done " << std::endl;
 
 			}
 			
@@ -454,11 +448,20 @@ namespace ft{
 			
 			NODE* lower_bound (NODE *first, KEY key) const{
 				while (first){
-						std::cout << first->node_pair.first << std::endl;
-					// if (compare(first->node_pair.first, key))
+						// std::cout << first->node_pair.first << std::endl;
+					if (compare(first->node_pair.first, key))
 						first = first->next_node(first);
-					// else
-						// break ;
+					else
+						break ;
+				}
+				return first;
+			}
+
+			NODE* upper_bound (NODE *first, KEY key) const{
+				while (first){
+					if (compare(key,first->node_pair.first))
+						break ;
+					first = first->next_node(first);
 				}
 				return first;
 			}

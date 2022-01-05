@@ -2,7 +2,7 @@
 #define BDRCTNL__H
 #include <type_traits>
 #include "avl.hpp"
-#include "util.h"
+#include "utils.hpp"
 namespace ft
 {
 	template <class T, class pair_t, class Pointer = T*, class Reference = T&>
@@ -17,11 +17,12 @@ namespace ft
 			typedef	typename 	Avl<key_t, mapped_t, typename tree_t::Compare>::NODE 	value_type;
 			typedef 			pair_t*								pointer ;
 			typedef				pair_t&								reference ;
-			typedef	typename 	Avl<key_t, mapped_t, typename tree_t::Compare>::NODE 			node_t;
+			// typedef	typename 	Avl<key_t, mapped_t, typename tree_t::Compare>::NODE 			node_t;
 			typedef				ptrdiff_t							difference_type;
 
 		private:	
 			typedef 			bidirectional_iterator< const T, const pair_t >	const_iterator;
+			typedef 			bidirectional_iterator<T, pair_t >	test_iter;
 			tree_t					*current_tree;
 			nood_t					*_node;
 		public:
@@ -57,7 +58,6 @@ namespace ft
 			}
 
 			bidirectional_iterator& operator++(){
-				node_t *temp = _node;
 				_node = _node->next_node(_node);
 				if (_node == NULL){
 					_node = current_tree->the_last_node;
@@ -88,15 +88,15 @@ namespace ft
 				return tmp;
 			}
 	
-			template <class it_1, class it_2>
-			friend bool operator==(const it_1  &iter, const it_2 &iter2){
+			// template <class it_1, class it_2>
+			friend bool operator==(const bidirectional_iterator  &iter, const bidirectional_iterator &iter2){
 				if (iter._node == iter2._node)
 					return true;
 				return false;
 			}
 		
-			template <class it_1, class it_2>
-			friend bool operator!=(const it_1  &iter, const it_2 &iter2){
+			// template <class it_1, class it_2>
+			friend bool operator!=(const bidirectional_iterator  &iter, const bidirectional_iterator &iter2){
 				return !(iter == iter2);
 			}
 	};

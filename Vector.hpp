@@ -259,7 +259,8 @@ namespace ft
 			}
 			template <class InputIterator>
 		  	void assign (InputIterator first, InputIterator last,  typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type = InputIterator()){
-				l_size new_size = last - first;
+				l_size new_size = std::distance(first, last);
+
 				l_size index = 0;
 				if (_capacity >=  new_size)
 				{
@@ -518,51 +519,6 @@ namespace ft
   	void swap (Vector<T_V,Alloc>& x, Vector<T_V,Alloc>& y){
 		x.swap(y);
   	}
-	template <class InputIterator1, class InputIterator2>
-	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2){
-		while (first1 != last1){
-			if (*first1 != *first2)
-				return (false);
-			first1++;
-			first2++;
-		}
-		return (true);
-	}
-	template <class InputIterator1, class InputIterator2, class BinaryPredicate>
-	bool equal (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, BinaryPredicate pred){
-		while (first1 != last1){
-			if (!pred(*first1,*first2))
-				return (false);
-			first1++;
-			first2++;
-		}
-		return (true);
-
-	}
-	template <class InputIterator1, class InputIterator2>
-  	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2){
-		while (first1!=last1){
-			if (first2==last2 || *first2<*first1) 
-				return false;
-			else if (*first1<*first2) 
-				return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
-	template <class InputIterator1, class InputIterator2, class Compare>
-	bool lexicographical_compare (InputIterator1 first1, InputIterator1 last1, InputIterator2 first2, InputIterator2 last2, Compare comp){
-		while (first1!=last1){
-			if (first2==last2 || *first2<*first1) 
-				return false;
-			else if (comp(*first1, *first2))
-				return true;
-			++first1; ++first2;
-		}
-		return (first2!=last2);
-	}
-
-
 	template <class T, class Alloc>
   	bool operator== (const Vector<T,Alloc>& lhs, const Vector<T,Alloc>& rhs){
 		if (lhs.size() != rhs.size())
