@@ -7,9 +7,6 @@ namespace ft
 	class reverse_iterator
 	{
 		private:
-			// typedef reverse_iterator <random_access_iterator <typename Iterator_::iterator_category, const typename Iterator_::value_type> > const_reverse_iterator;
-
-			// typedef reverse_iterator <const  Iterator_ > const_reverse_iterator;
 		public:
 			typedef 			Iterator_ iterator_type;
 			typedef typename	Iterator_::iterator_category iterator_category;
@@ -28,7 +25,7 @@ namespace ft
 			reverse_iterator (const reverse_iterator& rev_it){
 				this->current = rev_it.base();
 			}
-			
+
 			template <class iter_t>
 			reverse_iterator& operator=(iter_t const &r_it){
 				this->current = r_it.base();
@@ -41,10 +38,6 @@ namespace ft
 				return *tmp;
 
 			}
-			// operator reverse_iterator<const iterator_type>() {
-			// 	return reverse_iterator<const iterator_type>(this->current);
-			// }
-
 			iterator_type base() const{
 				return  current;
 			}

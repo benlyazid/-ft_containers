@@ -15,7 +15,7 @@ namespace ft
 			typedef Pointer pointer ;
 			typedef Reference reference ;
 			typedef Distance difference_type ;
-		protected: // private
+		protected:
 			pointer current;
 		public:
 			random_access_iterator(T *m_ptr) :current(m_ptr){
@@ -66,7 +66,6 @@ namespace ft
 				--(*this);
 				return tmp;
 			}
-			// change this from const it_1 ... to rando....<category, it_1> 
 			template <class it_1, class it_2>
 			friend bool operator==(const it_1  &iter, const it_2 &iter2){
 				return (iter.current == iter2.current);
